@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\TextParser.cs" />
     <Compile Include="Assets\Scripts\Entry.cs" />
+    <Compile Include="Assets\Scripts\HEADER.cs" />
     <Compile Include="Assets\Scripts\Utils\MonoSingleton.cs" />
     <Compile Include="Assets\Scripts\Utils\Singleton.cs" />
   </ItemGroup>

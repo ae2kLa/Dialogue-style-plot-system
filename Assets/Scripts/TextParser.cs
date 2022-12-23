@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
+using static UnityEditor.Progress;
 
 public class TextParser
 {
@@ -19,12 +22,24 @@ public class TextParser
             lines = File.ReadAllLines(_filePath);
             fs.Close();
 
-            foreach (string line in lines)
+            //foreach (string line in lines)
+            //{
+            //    UnityEngine.Debug.Log(line);
+            //}
+
+            MyCommand[] mc = ParserByLine();
+            Type type = Type.GetType(mc[0].name);
+            object obj = Activator.CreateInstance(type);
+            Dictionary<string, object> parameters = ParseParameters(mc[0].parameter);
+
+            foreach (var p in parameters)
             {
-                //UnityEngine.Debug.Log(line);
+                PropertyInfo property = type.GetProperty(p.Key);
+                property.SetValue(obj, Convert.ChangeType(p.Value, property.PropertyType));
             }
 
-            ParserByLine();
+            MethodInfo m = type.GetMethod("Execute");
+            m.Invoke(obj , null);
         }
         catch (IOException ex)
         {
@@ -39,8 +54,10 @@ public class TextParser
         for(int i = 0; i < lines.Length; i++)
         {
             res[i].name = GetName(lines[i]);
-            UnityEngine.Debug.Log(res[i].name);
             res[i].parameter = GetParam(lines[i] , res[i].name);
+
+            UnityEngine.Debug.Log(res[i].name);
+            UnityEngine.Debug.Log(res[i].parameter);
         }
 
         return res;
@@ -50,6 +67,7 @@ public class TextParser
     {
         Regex regex = new Regex(@"(?<=\[)\w+");
         Match match = regex.Match(_line);
+
         if (match.Success)
             return match.Value;
 
@@ -57,31 +75,71 @@ public class TextParser
     }
 
 
-    public List<Dictionary<string, object>> GetParam(string _line , string head)
+    #region"Old Function"
+
+    //public List<Dictionary<string, object>> GetParam(string _line , string head)
+    //{
+    //    Regex regex = new Regex(@"(?<=\()([^)]+)(?=\))");
+    //    Match match = regex.Match(_line);
+
+    //    if (match.Success)
+    //    {
+    //        string pattern = @"([^,]+=[^,]+)";
+    //        MatchCollection matches = Regex.Matches(match.Value, pattern);
+
+    //        foreach (Match m in matches)
+    //        {
+    //            UnityEngine.Debug.Log(m.Groups[1].Value.Trim());
+    //            List<Dictionary<string, object>> res = new List<Dictionary<string, object>>();
+
+    //        }
+    //    }
+
+    //    return null;
+    //}
+    #endregion
+
+    #region"New Function"
+    public string GetParam(string _line, string head)
     {
         Regex regex = new Regex(@"(?<=\()([^)]+)(?=\))");
         Match match = regex.Match(_line);
 
         if (match.Success)
-        {
-            string pattern = @"([^,]+=[^,]+)";
-            MatchCollection matches = Regex.Matches(match.Value, pattern);
-
-            foreach (Match m in matches)
-            {
-                UnityEngine.Debug.Log(m.Groups[1].Value.Trim());
-                List<Dictionary<string, object>> res = new List<Dictionary<string, object>>();
-                
-            }
-        }
+            return match.Value;
 
         return null;
     }
+    #endregion
+
+
+    private Dictionary<string, object> ParseParameters(string param)
+    {
+        Dictionary<string, object> parameters = new Dictionary<string, object>();
+
+        MatchCollection matches = Regex.Matches(param, @"(\w+)\s*=\s*([^,]+)");
+
+        foreach (Match match in matches)
+        {
+            string key = match.Groups[1].Value;
+            string value = match.Groups[2].Value;
+
+            // 去除两端的双引号
+            if (value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                value = value.Substring(1, value.Length - 2);
+            }
+
+            parameters.Add(key, value);
+        }
+        return parameters;
+    }
+
 
 }
 
 public struct MyCommand
 {
     public string name;
-    public List<Dictionary<string, object>> parameter;
+    public string parameter;
 };
