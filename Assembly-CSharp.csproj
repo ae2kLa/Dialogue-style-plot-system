@@ -56,9 +56,14 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\PlotEffect\EffectBase.cs" />
+    <Compile Include="Assets\Scripts\PlotEffect\Background.cs" />
     <Compile Include="Assets\Scripts\TextParser.cs" />
     <Compile Include="Assets\Scripts\Entry.cs" />
-    <Compile Include="Assets\Scripts\HEADER.cs" />
+    <Compile Include="Assets\Scripts\PlotEffect\Delay.cs" />
+    <Compile Include="Assets\Scripts\PlotEffect\Dialogue.cs" />
+    <Compile Include="Assets\Scripts\PlotEffect\HEADER.cs" />
+    <Compile Include="Assets\Scripts\PlotEffect\CameraShake.cs" />
     <Compile Include="Assets\Scripts\Utils\MonoSingleton.cs" />
     <Compile Include="Assets\Scripts\Utils\Singleton.cs" />
   </ItemGroup>
