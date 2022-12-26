@@ -10,10 +10,11 @@ namespace plot
         {
             base.Execute();
 
-            UnityEngine.Debug.Log(title + " " + is_skippable + " " + fit_mode);
+            //UnityEngine.Debug.Log(title + " " + is_skippable + " " + fit_mode);
 
-            if(is_skippable == true)
-                UnityEngine.Debug.Log("bool convert success!");
+            //if(is_skippable == true)
+            //    UnityEngine.Debug.Log("bool convert success!");
+            EventReceiver.Instance.HEADER(title, is_skippable, fit_mode);
         }
 
     }

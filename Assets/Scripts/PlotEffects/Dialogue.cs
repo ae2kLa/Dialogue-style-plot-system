@@ -1,4 +1,6 @@
 
+using UnityEngine;
+
 namespace plot
 { 
     public class Dialogue : EffectBase
@@ -10,7 +12,7 @@ namespace plot
         {
             base.Execute();
 
-
+            EventReceiver.Instance.Dialogue(name , text);
         }
     }
 

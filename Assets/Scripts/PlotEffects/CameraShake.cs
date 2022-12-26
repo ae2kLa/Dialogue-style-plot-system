@@ -1,3 +1,5 @@
+using System;
+
 namespace plot
 {
     public class CameraShake: EffectBase
@@ -9,6 +11,13 @@ namespace plot
         public int Randomness { get; set; }
         public bool Fadeout { get; set; }
         public bool Block { get; set; }
+
+        protected override void Execute()
+        {
+            base.Execute();
+
+            EventReceiver.Instance.CameraShake(Duration, XStrength, YStrength, Vibrato, Randomness, Fadeout, Block);
+        }
     }
 
 }
