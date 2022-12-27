@@ -1,6 +1,5 @@
 [HEADER(title="title_test", is_skippable=true, fit_mode="BLACK_MASK")]
 [Delay(time=2)]
-[Dialogue(name="成员",text="呃 ......")]
+[Dialogue(name="成成员成员成员员",text="呃......    呃......呃......呃......呃......呃......呃......呃......呃......呃......呃......呃......呃......呃......呃......")]
 [Background(image="bg_cher_1",fadetime=1,screenadapt="coverall")]
-[Blocker(a=0, fadetime=1.5, block=true)]
-[CameraShake(duration=1.5, xstrength=7, ystrength=5, vibrato=30, randomness=90, fadeout=true, block=false)]
+[CameraShake(duration=1.5, xstrength=7, ystrength=5, vibrato=30, randomness=90, fadeout=true)]

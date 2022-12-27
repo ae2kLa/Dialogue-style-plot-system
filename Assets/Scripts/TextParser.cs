@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
@@ -82,12 +83,15 @@ namespace plot
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            MatchCollection matches = Regex.Matches(param, @"(\w+)\s*=\s*([^\s,]+)");
+            MatchCollection matches = Regex.Matches(param, @"(\w+)\s*=\s*((?:""[^""]*""|true|false|\d+(?:.\d+)?)+)");
 
             foreach (Match match in matches)
             {
                 string key = match.Groups[1].Value;
                 string value = match.Groups[2].Value;
+
+                UnityEngine.Debug.Log(key);
+                UnityEngine.Debug.Log(value);
 
                 // 去除两端的双引号
                 if (value.StartsWith("\"") && value.EndsWith("\""))
@@ -120,7 +124,7 @@ namespace plot
         {
             MyCommand[] mc = ParserByLine();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < mc.Length; i++)
             {
                 Type type = Type.GetType("plot." + mc[i].name);
                 object obj = Activator.CreateInstance(type);
