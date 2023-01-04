@@ -1,9 +1,12 @@
+using System.Collections;
+using UnityEngine;
+
 namespace plot
 {
 
-    public class EffectBase
+    public abstract class EffectBase
     {
-        protected virtual void Execute() { }
+        protected abstract void Execute();
     }
 
 

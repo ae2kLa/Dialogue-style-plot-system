@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 
 namespace plot
@@ -10,8 +11,6 @@ namespace plot
 
         protected override void Execute()
         {
-            base.Execute();
-
             EventReceiver.Instance.Dialogue(name , text);
         }
     }
