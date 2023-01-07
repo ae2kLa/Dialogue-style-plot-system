@@ -230,8 +230,8 @@ GameObject:
   m_Component:
   - component: {fileID: 956018019}
   - component: {fileID: 956018018}
-  - component: {fileID: 956018020}
   - component: {fileID: 956018021}
+  - component: {fileID: 956018020}
   m_Layer: 5
   m_Name: UIPanel
   m_TagString: Untagged
@@ -290,7 +290,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 956018017}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1f71b0291a184544b76805948573c64, type: 3}
+  m_Script: {fileID: 11500000, guid: b6e28ad1a4efbad4bb7587aedd5ed336, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   global: 1
@@ -303,7 +303,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 956018017}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 155e76b79d508f54199ff31f2c820be8, type: 3}
+  m_Script: {fileID: 11500000, guid: bb41135cd443ce04e9599af65ef4f7fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   global: 1
