@@ -1,8 +1,9 @@
 using FairyGUI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 
 namespace plot
@@ -10,7 +11,7 @@ namespace plot
     public class CommandReceiver : MonoSingleton<CommandReceiver>
     {
         private GComponent dialogueRoot;
-        private List<int> decisions = new List<int>();
+        public List<int> decisions = new List<int>();
         private float typingEffectTimeDevision = 0.01f;
 
         protected void Awake()
@@ -67,15 +68,20 @@ namespace plot
         }
 
 
-
-        public IEnumerator Decision(string options, string values)
+        public IEnumerator Decision(string options)
         {
-            //等待点击按钮
-            yield return new WaitForMouseButtonDown(1);
+            string[] parts = Regex.Split(options, ";");
+            GButton[] buttons = new GButton[parts.Length];
+            for(int i = 0 ; i < parts.Length; i++)
+            {
+                //创建GButton
+
+            }
+            yield return new WaitForButtonClick(buttons);
             Debug.Log("Decision Done!");
         }
 
-        public IEnumerator Predicate()
+        public IEnumerator Predicate(int value)
         {
             yield return new WaitForMouseButtonDown(1);
             Debug.Log("Predicate Done!");

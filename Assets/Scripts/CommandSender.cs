@@ -12,10 +12,14 @@ namespace plot
 {
     public class CommandSender : MonoSingleton<CommandSender>
     {
-        public string filePath = "Assets/Text/level01.txt";
         private TextParser textParser;
-        public SenderState senderState = SenderState.KeepGoOn;
-        public int targetChoice = -1;
+        public string filePath = "Assets/Text/level01.txt";
+
+        [HideInInspector]
+        public int i = 0;
+        [HideInInspector]
+        public MyCommand[] mc;
+
         private void Awake()
         {
             try
@@ -61,32 +65,11 @@ namespace plot
         #region new function
         IEnumerator ExecuteAllCommands()
         {
-            MyCommand[] mc = textParser.ParserByLine();
+            mc = textParser.ParserByLine();
             Type type = Type.GetType("plot.CommandReceiver");
 
-            for (int i = 0; i < mc.Length; i++)
+            for (i = 0; i < mc.Length; i++)
             {
-                if(senderState == SenderState.FindPredicate)
-                {
-                    //KeepGoOn
-                    if (mc[i].name.Equals("PredicateEnd"))
-                    {
-                        senderState = SenderState.KeepGoOn;
-                    }
-                    else if(mc[i].name.Equals("Predicate"))
-                    {
-                        Dictionary<string, object> ps = textParser.ParseParameters(mc[i].parameter);
-                        int choice = (int)Convert.ChangeType(ps["value"], Type.GetType("int"));
-                        if (choice == targetChoice)
-                        {
-                            senderState = SenderState.KeepGoOn;
-                        }
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
 
                 MethodInfo method = type.GetMethod(mc[i].name, BindingFlags.Public | BindingFlags.Instance);
                 ParameterInfo[] paramInfo = method.GetParameters();
@@ -116,15 +99,21 @@ namespace plot
         }
         #endregion
 
-
+        public void FindPredicate(ref int i , MyCommand[] mc ,int targetChoice)
+        {
+            for(i++ ; i < mc.Length ; i++)
+            {
+                if (mc[i].name.Equals("Predicate"))
+                {
+                    Dictionary<string, object> ps = textParser.ParseParameters(mc[i].parameter);
+                    int predicateNum = (int)Convert.ChangeType(ps["value"], Type.GetType("int"));
+                    if (predicateNum == targetChoice)
+                        return;
+                }
+            }
+        }
 
     }
 
-    public enum SenderState
-    {
-        KeepGoOn = 0,
-        FindPredicate,
-        EndPredicate
-    };
 
 }
