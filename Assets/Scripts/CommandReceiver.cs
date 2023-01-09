@@ -11,8 +11,10 @@ namespace plot
     public class CommandReceiver : MonoSingleton<CommandReceiver>
     {
         private GComponent dialogueRoot;
+        [HideInInspector]
         public List<int> decisions = new List<int>();
         private float typingEffectTimeDevision = 0.01f;
+        private Vector2 pixelSize = new Vector2(1920, 1080);
 
         protected void Awake()
         {
@@ -25,7 +27,7 @@ namespace plot
         {
             GLoader loader = dialogueRoot.GetChild("n4").asLoader;
             //TODO:和设置屏幕分辨率相关联
-            loader.SetSize(1920, 1080);
+            loader.SetSize(pixelSize.x, pixelSize.y);
         }
 
         public IEnumerator HEADER(string title, bool is_skippable, string fit_mode)
@@ -34,7 +36,7 @@ namespace plot
             Debug.Log("HEADER Done!");
         }
 
-        public IEnumerator Background(string image = "white")
+        public IEnumerator Background(string image = "grey")
         {
             GLoader loader = dialogueRoot.GetChild("n4").asLoader;
             loader.url = image;
@@ -72,18 +74,39 @@ namespace plot
         {
             string[] parts = Regex.Split(options, ";");
             GButton[] buttons = new GButton[parts.Length];
-            for(int i = 0 ; i < parts.Length; i++)
+
+            GList list = new GList();
+            list.SetSize(800, 600);
+            list.SetPosition(pixelSize.x/2 - 400 , pixelSize.y/2 - 300 , 0f);
+            list.columnGap = 100;
+            dialogueRoot.AddChild(list);
+
+            for (int i = 0 ; i < parts.Length; i++)
             {
                 //创建GButton
-
+                //buttons[i] = new GButton();
+                buttons[i] = UIPackage.CreateObject("Package1", "DecisionButton").asButton;
+                list.AddChild(buttons[i]);
             }
+
             yield return new WaitForButtonClick(buttons);
+
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                buttons[i].Dispose();
+            }
+            list.Dispose();
             Debug.Log("Decision Done!");
         }
 
-        public IEnumerator Predicate(int value)
+        public IEnumerator Predicate(int value = -1)
         {
-            yield return new WaitForMouseButtonDown(1);
+            if (value != -1)
+            {
+                CommandSender.Instance.FindPredicate(-1);
+            }
+
+            yield return null;
             Debug.Log("Predicate Done!");
         }
 

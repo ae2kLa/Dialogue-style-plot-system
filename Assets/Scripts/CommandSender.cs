@@ -99,16 +99,17 @@ namespace plot
         }
         #endregion
 
-        public void FindPredicate(ref int i , MyCommand[] mc ,int targetChoice)
+        public void FindPredicate(int targetChoice)
         {
             for(i++ ; i < mc.Length ; i++)
             {
                 if (mc[i].name.Equals("Predicate"))
                 {
+                    if (mc[i].parameter == null) return;
+
                     Dictionary<string, object> ps = textParser.ParseParameters(mc[i].parameter);
-                    int predicateNum = (int)Convert.ChangeType(ps["value"], Type.GetType("int"));
-                    if (predicateNum == targetChoice)
-                        return;
+                    int predicateNum = (int)Convert.ChangeType(ps["value"], typeof(int));
+                    if (predicateNum == targetChoice) return;
                 }
             }
         }

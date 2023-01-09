@@ -33,10 +33,14 @@ namespace plot
             {
                 if (buttons[i].selected == true)
                 {
-                    CommandSender.Instance.FindPredicate(ref CommandSender.Instance.i, CommandSender.Instance.mc, i);
+                    CommandSender.Instance.FindPredicate(i);
                     CommandReceiver.Instance.decisions.Add(i);
+                    buttons[i].enabled = false;
                 }
-                buttons[i].onChanged.Remove(clicked);
+                else
+                {
+                    buttons[i].touchable = false;
+                }
             }
             buttonClicked = true;
         }
