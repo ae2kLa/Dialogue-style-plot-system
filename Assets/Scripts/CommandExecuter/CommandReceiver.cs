@@ -110,12 +110,6 @@ namespace plot
             Debug.Log("Predicate Done!");
         }
 
-        public IEnumerator CameraShake(double duration, double xstrength, double ystrength, int vibrato, int randomness, bool fadeout)
-        {
-            yield return null;
-            Debug.Log("CameraShake Done!");
-        }
-
 
 
 

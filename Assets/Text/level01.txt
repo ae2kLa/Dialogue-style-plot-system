@@ -12,4 +12,3 @@
 [Dialogue(name="ccc",text="ccccc")]
 [Predicate]
 [Dialogue(name="member",text="text......    text......text.....text......text......text......")]
-[CameraShake(duration=1.5, xstrength=7, ystrength=5, vibrato=30, randomness=90, fadeout=true)]
