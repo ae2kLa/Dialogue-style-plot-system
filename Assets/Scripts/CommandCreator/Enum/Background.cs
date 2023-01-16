@@ -1,11 +1,10 @@
 using System;
-using UnityEngine;
 
 namespace plot
 {
 
     [Serializable]
-    public class Background : ScriptableObject
+    public class Background : CommandBase
     {
         public string image;
     }
