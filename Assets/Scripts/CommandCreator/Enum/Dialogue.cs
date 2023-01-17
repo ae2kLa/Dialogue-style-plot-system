@@ -5,7 +5,7 @@ namespace plot
     [Serializable]
     public class Dialogue : CommandBase
     {
-        public string name;
+        public new string name;
         public string text;
     }
 }

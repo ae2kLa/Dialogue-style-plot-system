@@ -1,5 +1,7 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -28,14 +30,13 @@ namespace plot
             private int selectedIndex;
             private ReorderableList reorderableList;
             private string fileName;
-            private string scriptableObjectSavePath = "Assets/Scripts/CommandCreator/SO/";
-            private string txtSavePath = "Assets/Scripts/CommandCreator/TXT";
+            private string txtSavePath = "Assets/Scripts/CommandCreator/TXT/";
 
             private void OnEnable()
             {
                 commandConfig = (CommandConfig)target;
                 selectedIndex = 0;
-                reorderableList = new ReorderableList(commandConfig.commandList, typeof(ScriptableObject), true, true, true, true);
+                reorderableList = new ReorderableList(commandConfig.commandList, typeof(CommandBase), true, true, true, true);
 
                 reorderableList.elementHeightCallback = (int index) =>
                 {
@@ -72,24 +73,20 @@ namespace plot
                     serializedObject.ApplyModifiedProperties();
                 };
 
-                reorderableList.drawHeaderCallback = (Rect rect) =>
-                {
-                    EditorGUI.LabelField(rect, "Commands List");
-                };
-
                 reorderableList.onAddCallback = (ReorderableList l) =>
                 {
                     selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, Enum.GetNames(typeof(CommandType)));
                     string className = Enum.GetName(typeof(CommandType), (CommandType)selectedIndex);
                     Type commandType = Type.GetType("plot." + className);
-                    commandConfig.commandList.Add(ScriptableObject.CreateInstance(commandType));
+                    ScriptableObject obj = ScriptableObject.CreateInstance(commandType);
+                    Debug.Log(obj);
+                    commandConfig.commandList.Add(obj as CommandBase);
                 };
             }
 
             public override void OnInspectorGUI()
             {
                 serializedObject.Update();
-                //reorderableList.DoLayoutList();
                 Rect rect = EditorGUILayout.GetControlRect(false, reorderableList.GetHeight());
                 reorderableList.DoList(rect);
 
@@ -105,29 +102,16 @@ namespace plot
 
                 fileName = EditorGUILayout.TextField("fileName: ", fileName);
 
-                EditorGUILayout.LabelField("scriptableObjectSavePath: " + scriptableObjectSavePath);
-                if (GUILayout.Button("Generate ScriptableObject Commands!"))
-                {
-                    GenerateSOCommands(fileName);
-                }
-                EditorGUILayout.LabelField("txtSavePath: " + txtSavePath);
+                EditorGUILayout.LabelField("txt generate & load path: " + txtSavePath);
                 if (GUILayout.Button("Generate txt Commands!"))
                 {
                     GenerateTXTCommands(fileName);
                 }
-            }
 
-            private void GenerateSOCommands(string fileName)
-            {
-                if (string.IsNullOrWhiteSpace(fileName))
+                if (GUILayout.Button("Load txt File"))
                 {
-                    Debug.LogWarning("File name is NULL or empty. Please input valid path!");
-                    return;
+                    LoadTXTCommands(fileName);
                 }
-
-                AssetDatabase.CreateAsset(commandConfig, scriptableObjectSavePath + fileName + ".asset");
-                AssetDatabase.SaveAssets();
-                Debug.Log("Generate SO Commands!");
             }
 
             private void GenerateTXTCommands(string fileName)
@@ -137,14 +121,67 @@ namespace plot
                     Debug.LogWarning("File mame is NULL or empty. Please input valid path!");
                     return;
                 }
+                
+                string path = txtSavePath + fileName + ".txt";
+                string content = "";
+                foreach (CommandBase command in commandConfig.commandList)
+                {
+                    content += command.GetType().Name;
+                    content += "\n";
+                    //content += JsonUtility.ToJson(command); 
+                    //content += "\n";
+                    string json = JsonConvert.SerializeObject(command);
+                    content += json;
+                    content += "\n";
+                }
+                File.WriteAllText(path, content);
 
-                AssetDatabase.CreateAsset(commandConfig, txtSavePath + fileName + ".asset");
-                AssetDatabase.SaveAssets();
                 Debug.Log("Generate TXT Commands!");
             }
+
+            private void LoadTXTCommands(string fileName)
+            {
+                if (string.IsNullOrWhiteSpace(fileName))
+                {
+                    Debug.LogWarning("File name is NULL or empty. Please input valid path!");
+                    return;
+                }
+
+                string filePath = txtSavePath + fileName + ".txt";
+                if (!File.Exists(filePath))
+                {
+                    Debug.LogWarning("File not exists! Please input valid path!");
+                    return;
+                }
+
+                commandConfig.commandList.Clear();
+                string[] lines = File.ReadAllLines(filePath);
+                for (int i = 0; i < lines.Length; i += 2)
+                {
+                    string className = lines[i];
+                    Type commandType = Type.GetType("plot." + className);
+                    if (commandType == null)
+                    {
+                        Debug.LogWarning("Invalid class name: " + className);
+                        continue;
+                    }
+
+                    //CommandBase command = (CommandBase)JsonUtility.FromJson(lines[i+1], commandType);
+                    CommandBase command = (CommandBase)JsonConvert.DeserializeObject(lines[i + 1] , commandType);
+                    if (command == null)
+                    {
+                        Debug.LogWarning("Failed to create instance of " + className);
+                        continue;
+                    }
+                    commandConfig.commandList.Add(command);
+                }
+                Debug.Log("Load TXT Commands!");
+
+            }
         }
+
+
     }
 }
 
-}
 
