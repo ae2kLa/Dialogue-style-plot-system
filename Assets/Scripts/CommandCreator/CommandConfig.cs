@@ -2,6 +2,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -18,25 +19,27 @@ namespace plot
             Background,
             Delay,
             Dialogue,
+            Decision,
+            Predicate
         }
 
         public List<CommandBase> commandList = new List<CommandBase>();
+        public string fileName;
+        private string txtSavePath = "Assets/Scripts/CommandCreator/TXT/"; 
 
         [CustomEditor(typeof(CommandConfig))]
         public class CommandConfigEditor : Editor
         {
-
             public CommandConfig commandConfig;
             private int selectedIndex;
             private ReorderableList reorderableList;
-            private string fileName;
-            private string txtSavePath = "Assets/Scripts/CommandCreator/TXT/";
-
+            
             private void OnEnable()
             {
                 commandConfig = (CommandConfig)target;
                 selectedIndex = 0;
                 reorderableList = new ReorderableList(commandConfig.commandList, typeof(CommandBase), true, true, true, true);
+                commandConfig.fileName = commandConfig.name;
 
                 reorderableList.elementHeightCallback = (int index) =>
                 {
@@ -71,6 +74,7 @@ namespace plot
                         rect.y += rect.height;
                     }
                     serializedObject.ApplyModifiedProperties();
+                    GenerateTXTCommands(commandConfig.fileName);
                 };
 
                 reorderableList.onAddCallback = (ReorderableList l) =>
@@ -81,6 +85,12 @@ namespace plot
                     ScriptableObject obj = ScriptableObject.CreateInstance(commandType);
                     Debug.Log(obj);
                     commandConfig.commandList.Add(obj as CommandBase);
+                };
+
+                //在列表中元素的顺序、数量发生变化时被调用
+                reorderableList.onChangedCallback = (ReorderableList l) =>
+                {
+                    GenerateTXTCommands(commandConfig.fileName);
                 };
             }
 
@@ -100,17 +110,18 @@ namespace plot
 
                 GUILayout.Box("SaveOptions", new GUILayoutOption[] { GUILayout.ExpandWidth(true), GUILayout.Height(20) });
 
-                fileName = EditorGUILayout.TextField("fileName: ", fileName);
+                EditorGUILayout.LabelField("txt generate & load path: " + commandConfig.txtSavePath + commandConfig.fileName);
+                //commandConfig.fileName = EditorGUILayout.TextField("fileName: ", commandConfig.fileName);
 
-                EditorGUILayout.LabelField("txt generate & load path: " + txtSavePath);
-                if (GUILayout.Button("Generate txt Commands!"))
-                {
-                    GenerateTXTCommands(fileName);
-                }
+                EditorGUILayout.LabelField("Auto save is always running.");
+                //if (GUILayout.Button("Save commands in txt"))
+                //{
+                //    GenerateTXTCommands(commandConfig.fileName);
+                //}
 
                 if (GUILayout.Button("Load txt File"))
                 {
-                    LoadTXTCommands(fileName);
+                    LoadTXTCommands(commandConfig.fileName);
                 }
             }
 
@@ -122,7 +133,7 @@ namespace plot
                     return;
                 }
                 
-                string path = txtSavePath + fileName + ".txt";
+                string path = commandConfig.txtSavePath + fileName + ".txt";
                 string content = "";
                 foreach (CommandBase command in commandConfig.commandList)
                 {
@@ -147,7 +158,7 @@ namespace plot
                     return;
                 }
 
-                string filePath = txtSavePath + fileName + ".txt";
+                string filePath = commandConfig.txtSavePath + fileName + ".txt";
                 if (!File.Exists(filePath))
                 {
                     Debug.LogWarning("File not exists! Please input valid path!");

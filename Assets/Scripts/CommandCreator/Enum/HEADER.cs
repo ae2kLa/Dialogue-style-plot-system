@@ -9,6 +9,5 @@ namespace plot
         public string title;
         public bool is_skippable;
         public string fit_mode;
-        public List<string> list;
     }
 }

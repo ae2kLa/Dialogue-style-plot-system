@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace plot
 {
     [Serializable]
-    public class Decision : ScriptableObject
+    public class Decision : CommandBase
     {
-        public string options = "a;b;c";
+        public List<string> list;
     }
 }

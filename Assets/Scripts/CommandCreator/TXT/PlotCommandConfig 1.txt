@@ -1,0 +1,6 @@
+HEADER
+{"title":"123","is_skippable":false,"fit_mode":"权威","name":"","hideFlags":0}
+Dialogue
+{"name":"123","text":"123","hideFlags":0}
+Delay
+{"time":0.0,"name":"","hideFlags":0}

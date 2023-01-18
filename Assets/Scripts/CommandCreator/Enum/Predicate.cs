@@ -4,7 +4,7 @@ using UnityEngine;
 namespace plot
 {
     [Serializable]
-    public class Predicate : ScriptableObject
+    public class Predicate : CommandBase
     {
         public int value = 0;
     }
