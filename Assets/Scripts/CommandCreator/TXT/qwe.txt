@@ -1,4 +1,0 @@
-HEADER
-{"title":"c","is_skippable":true,"fit_mode":"s","list":["qwe","asd"],"name":"","hideFlags":0}
-Background
-{"image":"zx","name":"","hideFlags":0}

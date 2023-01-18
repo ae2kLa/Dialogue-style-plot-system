@@ -1,6 +1,0 @@
-HEADER
-{"title":"asd","is_skippable":true,"fit_mode":"","list":[],"name":"","hideFlags":0}
-Delay
-{"time":0.0,"name":"","hideFlags":0}
-Dialogue
-{"name":null,"text":null,"hideFlags":0}

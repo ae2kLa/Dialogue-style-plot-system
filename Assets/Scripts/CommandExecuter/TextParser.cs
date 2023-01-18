@@ -62,7 +62,7 @@ namespace plot
         #endregion
 
         #region"New GetParam Function"
-        private string GetParam(string _line, string head)
+        private string GetParam(string _line)
         {
             Regex regex = new Regex(@"(?<=\()([^)]+)(?=\))");
             Match match = regex.Match(_line);
@@ -80,15 +80,15 @@ namespace plot
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
 
-            MatchCollection matches = Regex.Matches(param, @"(\w+)\s*=\s*((?:""[^""]*""|true|false|\d+(?:.\d+)?)+)");
+            MatchCollection matches = Regex.Matches(param, @"(\w+)\s*=\s*((?:""[^""]*""|True|False|\d+(?:.\d+)?)+)");
 
             foreach (Match match in matches)
             {
                 string key = match.Groups[1].Value;
                 string value = match.Groups[2].Value;
 
-                UnityEngine.Debug.Log(key);
-                UnityEngine.Debug.Log(value);
+                //UnityEngine.Debug.Log(key);
+                //UnityEngine.Debug.Log(value);
 
                 // 去除两端的双引号
                 if (value.StartsWith("\"") && value.EndsWith("\""))
@@ -109,10 +109,10 @@ namespace plot
             for (int i = 0; i < lines.Length; i++)
             {
                 res[i].name = GetName(lines[i]);
-                res[i].parameter = GetParam(lines[i], res[i].name);
+                res[i].parameter = GetParam(lines[i]);
 
-                UnityEngine.Debug.Log(res[i].name);
-                UnityEngine.Debug.Log(res[i].parameter);
+                //UnityEngine.Debug.Log(res[i].name);
+                //UnityEngine.Debug.Log(res[i].parameter);
             }
 
             return res;

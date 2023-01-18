@@ -1,11 +1,11 @@
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Unity.VisualScripting;
+using System.Reflection;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
+
 
 namespace plot
 {
@@ -83,16 +83,12 @@ namespace plot
                     string className = Enum.GetName(typeof(CommandType), (CommandType)selectedIndex);
                     Type commandType = Type.GetType("plot." + className);
                     ScriptableObject obj = ScriptableObject.CreateInstance(commandType);
-                    Debug.Log(obj);
                     commandConfig.commandList.Add(obj as CommandBase);
                 };
 
-                //在列表中元素的顺序、数量发生变化时被调用
-                reorderableList.onChangedCallback = (ReorderableList l) =>
-                {
-                    GenerateTXTCommands(commandConfig.fileName);
-                };
+                LoadTXTCommands(commandConfig.fileName);
             }
+
 
             public override void OnInspectorGUI()
             {
@@ -114,7 +110,8 @@ namespace plot
                 //commandConfig.fileName = EditorGUILayout.TextField("fileName: ", commandConfig.fileName);
 
                 EditorGUILayout.LabelField("Auto save is always running.");
-                //if (GUILayout.Button("Save commands in txt"))
+
+                //if (GUILayout.Button("GenerateTXTCommands"))
                 //{
                 //    GenerateTXTCommands(commandConfig.fileName);
                 //}
@@ -135,59 +132,123 @@ namespace plot
                 
                 string path = commandConfig.txtSavePath + fileName + ".txt";
                 string content = "";
+
+                #region "已弃用的写入方式。"
+                /*原因：虽然能很方便的转换成Json格式，但用对应API生成对象时，由于引擎不推荐使用new创建SO对象，所以会报Warning；
+                 * 自定义正则来解析Json数据或许行得通，不过我最开始就实现了TextParser，无需再针对Json格式的解析造轮子*/
+                //foreach (CommandBase command in commandConfig.commandList)
+                //{
+                //    content += command.GetType().Name;
+                //    content += "\n";
+                //    string json = JsonConvert.SerializeObject(command);
+                //    content += json;
+                //    content += "\n";
+                //}
+                #endregion
+
+                #region "把commandList中的所有对象按顺序写入文本文件"
                 foreach (CommandBase command in commandConfig.commandList)
                 {
-                    content += command.GetType().Name;
-                    content += "\n";
-                    //content += JsonUtility.ToJson(command); 
-                    //content += "\n";
-                    string json = JsonConvert.SerializeObject(command);
-                    content += json;
-                    content += "\n";
-                }
-                File.WriteAllText(path, content);
+                    Type commandType = command.GetType();
+                    if (commandType == null)
+                    {
+                        Debug.LogWarning("Invalid commandType.");
+                        continue;
+                    }
+                    FieldInfo[] fields = commandType.GetFields();
+                    string commandString = "[" + command.GetType().Name + "(";
 
-                Debug.Log("Generate TXT Commands!");
+                    #region "把该对象中所有的属性按我的约定格式写入文本"
+                    foreach (var field in fields)
+                    {
+                        var value = field.GetValue(command);
+
+                        if(value == null)
+                        {
+                            commandString += field.Name + "=" + "\"\"" + ",";
+                            continue;
+                        }
+
+                        if (value.GetType() == typeof(string))
+                        {
+                            commandString += field.Name + "=" + "\"" + value + "\"" + ",";
+                        }
+                        else
+                        {
+                            commandString += field.Name + "=" + value + ",";
+                        }
+                    }
+                    #endregion
+                    commandString = commandString.TrimEnd(',');
+                    commandString += ")]";
+                    //Debug.Log(commandString);
+                    content += commandString + "\n";
+                }
+                #endregion
+
+                System.IO.File.WriteAllText(path, content);
+
+                //Debug.Log("Generate TXT Commands!");
             }
 
             private void LoadTXTCommands(string fileName)
             {
                 if (string.IsNullOrWhiteSpace(fileName))
                 {
-                    Debug.LogWarning("File name is NULL or empty. Please input valid path!");
+                    Debug.LogWarning("File name is NULL or empty, please input valid path!");
                     return;
                 }
 
                 string filePath = commandConfig.txtSavePath + fileName + ".txt";
                 if (!File.Exists(filePath))
                 {
-                    Debug.LogWarning("File not exists! Please input valid path!");
+                    Debug.LogWarning("File does not exists, please input valid path!");
                     return;
                 }
 
                 commandConfig.commandList.Clear();
-                string[] lines = File.ReadAllLines(filePath);
-                for (int i = 0; i < lines.Length; i += 2)
-                {
-                    string className = lines[i];
-                    Type commandType = Type.GetType("plot." + className);
-                    if (commandType == null)
-                    {
-                        Debug.LogWarning("Invalid class name: " + className);
-                        continue;
-                    }
 
-                    //CommandBase command = (CommandBase)JsonUtility.FromJson(lines[i+1], commandType);
-                    CommandBase command = (CommandBase)JsonConvert.DeserializeObject(lines[i + 1] , commandType);
+                TextParser textParser = new TextParser(filePath);
+                MyCommand[] mc = textParser.ParserByLine();
+
+                for (int i = 0; i < mc.Length; i++)
+                {
+                    CommandBase command = ScriptableObject.CreateInstance(mc[i].name) as CommandBase;
                     if (command == null)
                     {
-                        Debug.LogWarning("Failed to create instance of " + className);
+                        Debug.LogError("Failed to create instance of " + mc[i].name);
                         continue;
                     }
+
+                    Type commandType = command.GetType();
+                    if (commandType == null)
+                    {
+                        Debug.LogError("Invalid commandType in loading commands from txt.");
+                        continue;
+                    }
+
+                    #region "解析参数，并为command对象的每个字段赋值"
+                    Dictionary<string, object> parameters = textParser.ParseParameters(mc[i].parameter);
+                    FieldInfo[] fields = commandType.GetFields();
+                    for (int j = 0; j < fields.Length; j++)
+                    {
+                        if (parameters.ContainsKey(fields[j].Name))
+                        {
+                            var value = Convert.ChangeType(parameters[fields[j].Name], fields[j].FieldType);
+                            fields[j].SetValue(command, value);
+                        }
+                        else
+                        {
+                            Debug.LogError("The parameters " + "does not have "+ commandType + " 's field: " + fields[j].Name);
+                        }
+                    }
+                    #endregion
+
+
                     commandConfig.commandList.Add(command);
                 }
-                Debug.Log("Load TXT Commands!");
 
+                Debug.Log("Load TXT Commands!");
             }
         }
 
