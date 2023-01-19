@@ -1,7 +1,10 @@
+using FairyGUI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Xml.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -162,14 +165,43 @@ namespace plot
                     foreach (var field in fields)
                     {
                         var value = field.GetValue(command);
-
-                        if(value == null)
+                        Type fieldType = field.FieldType;
+                        //筛去为空的非泛型
+                        if (value == null && !fieldType.IsGenericType)
                         {
                             commandString += field.Name + "=" + "\"\"" + ",";
                             continue;
                         }
 
-                        if (value.GetType() == typeof(string))
+                        #region "处理泛型"
+                        if (fieldType.IsGenericType)
+                        {
+                            //commandString += field.Name + "=" + "\"" + value + "\"" + ",";
+
+                            //处理IList
+                            //if (field.FieldType.GetGenericArguments()[0] != null)
+                            if (typeof(IList).IsAssignableFrom(fieldType))
+                            {
+                                if(value == null) continue;
+
+                                //string elementClassName = field.FieldType.GetGenericArguments()[0].Name;
+                                int count = Convert.ToInt32(fieldType.GetProperty("Count").GetValue(value, null));
+                                if(count == 0) continue;
+
+                                var elementType = fieldType.GetProperty("Item").GetValue(value, new object[] { 0 }).GetType();
+                                commandString += "elementType" + "=" + "\"" + elementType .Namespace + "." + elementType.Name + "\"" + ",";
+                                for (int i = 0; i < count; i++)
+                                {
+                                    // 获取列表元素
+                                    object item = fieldType.GetProperty("Item").GetValue(value, new object[] { i });
+                                    commandString += "element" + (i+1) + "=" + "\"" + item + "\"" + ",";
+                                }
+
+                            }
+                            //TODO: 处理字典
+                        }
+                        #endregion
+                        else if(value.GetType() == typeof(string))
                         {
                             commandString += field.Name + "=" + "\"" + value + "\"" + ",";
                         }
@@ -230,6 +262,7 @@ namespace plot
                     #region "解析参数，并为command对象的每个字段赋值"
                     Dictionary<string, object> parameters = textParser.ParseParameters(mc[i].parameter);
                     FieldInfo[] fields = commandType.GetFields();
+
                     for (int j = 0; j < fields.Length; j++)
                     {
                         if (parameters.ContainsKey(fields[j].Name))
@@ -237,13 +270,50 @@ namespace plot
                             var value = Convert.ChangeType(parameters[fields[j].Name], fields[j].FieldType);
                             fields[j].SetValue(command, value);
                         }
+                        else if(fields[j].FieldType.IsGenericType)
+                        {
+                            //解析IList
+                            if (typeof(IList).IsAssignableFrom(fields[j].FieldType))
+                            {
+                                //试图适配所有基本类型但有困难
+                                //Type elemnetType = Type.GetType(parameters["elementType"] as string);
+                                //Type listType = typeof(List<>);
+                                //Type[] typeArgs = { elemnetType };
+                                //Type genericListType = listType.MakeGenericType(typeArgs);
+                                //object list = Activator.CreateInstance(genericListType);
+
+                                //if (parameters.ContainsKey("elementType"))
+                                //{
+                                //    fields[j].SetValue(command, list);
+                                //    continue;
+                                //}
+
+                                Type elemnetType = typeof(String);
+                                Type listType = typeof(List<>);
+                                Type[] typeArgs = { elemnetType };
+                                Type genericListType = listType.MakeGenericType(typeArgs);
+                                object list = Activator.CreateInstance(genericListType);
+
+                                MethodInfo addMethod = genericListType.GetMethod("Add");
+
+                                for (int k = 1; k < parameters.Count; k++)
+                                {
+                                    object[] objs = new object[1];
+                                    objs[0] = parameters["element" + k];
+                                    addMethod.Invoke(list, objs);
+                                    continue;
+                                }
+
+                                fields[j].SetValue(command, list);
+                            }
+                            //解析字典
+                        }
                         else
                         {
                             Debug.LogError("The parameters " + "does not have "+ commandType + " 's field: " + fields[j].Name);
                         }
                     }
                     #endregion
-
 
                     commandConfig.commandList.Add(command);
                 }
