@@ -2,7 +2,7 @@ using FairyGUI;
 using System.Linq;
 using UnityEngine;
 
-namespace plot
+namespace plot_command_executor
 {
     public class WaitForButtonClick : CustomYieldInstruction
     {

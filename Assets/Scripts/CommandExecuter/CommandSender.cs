@@ -1,4 +1,4 @@
-using plot;
+using plot_command_executor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 
-namespace plot
+namespace plot_command_executor
 {
     public class CommandSender : MonoSingleton<CommandSender>
     {
@@ -50,7 +50,7 @@ namespace plot
 
                 Dictionary<string, object> parameters = textParser.ParseParameters(mc[i].parameter);
 
-                //生成形参
+                #region 生成形参
                 for (int j = 0; j < paramInfo.Length; j++)
                 {
                     if (parameters.ContainsKey(paramInfo[j].Name))
@@ -66,6 +66,7 @@ namespace plot
                         UnityEngine.Debug.LogError("Function has no default parameter!");
                     }
                 }
+                #endregion
 
                 yield return StartCoroutine((IEnumerator)method.Invoke(CommandReceiver.Instance, invokeParams));
             }

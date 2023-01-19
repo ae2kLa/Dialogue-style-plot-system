@@ -1,16 +1,15 @@
-using FairyGUI;
+using plot_command_executor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Xml.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
 
-namespace plot
+namespace plot_command_creator
 {
     [Serializable]
     [CreateAssetMenu(fileName = "PlotCommandConfig", menuName = "PlotCommandConfig")]
@@ -28,7 +27,7 @@ namespace plot
 
         public List<CommandBase> commandList = new List<CommandBase>();
         public string fileName;
-        private string txtSavePath = "Assets/Scripts/CommandCreator/TXT/"; 
+        private string txtSavePath = "Assets/Scripts/CommandCreator/TXT/";
 
         [CustomEditor(typeof(CommandConfig))]
         public class CommandConfigEditor : Editor
@@ -36,7 +35,7 @@ namespace plot
             public CommandConfig commandConfig;
             private int selectedIndex;
             private ReorderableList reorderableList;
-            
+
             private void OnEnable()
             {
                 commandConfig = (CommandConfig)target;
@@ -132,7 +131,7 @@ namespace plot
                     Debug.LogWarning("File mame is NULL or empty. Please input valid path!");
                     return;
                 }
-                
+
                 string path = commandConfig.txtSavePath + fileName + ".txt";
                 string content = "";
 
@@ -179,29 +178,28 @@ namespace plot
                             //commandString += field.Name + "=" + "\"" + value + "\"" + ",";
 
                             //处理IList
-                            //if (field.FieldType.GetGenericArguments()[0] != null)
                             if (typeof(IList).IsAssignableFrom(fieldType))
                             {
-                                if(value == null) continue;
+                                if (value == null) continue;
 
                                 //string elementClassName = field.FieldType.GetGenericArguments()[0].Name;
                                 int count = Convert.ToInt32(fieldType.GetProperty("Count").GetValue(value, null));
-                                if(count == 0) continue;
+                                if (count == 0) continue;
 
                                 var elementType = fieldType.GetProperty("Item").GetValue(value, new object[] { 0 }).GetType();
-                                commandString += "elementType" + "=" + "\"" + elementType .Namespace + "." + elementType.Name + "\"" + ",";
+                                commandString += "elementType" + "=" + "\"" + elementType.Namespace + "." + elementType.Name + "\"" + ",";
                                 for (int i = 0; i < count; i++)
                                 {
                                     // 获取列表元素
                                     object item = fieldType.GetProperty("Item").GetValue(value, new object[] { i });
-                                    commandString += "element" + (i+1) + "=" + "\"" + item + "\"" + ",";
+                                    commandString += "element" + (i + 1) + "=" + "\"" + item + "\"" + ",";
                                 }
 
                             }
                             //TODO: 处理字典
                         }
                         #endregion
-                        else if(value.GetType() == typeof(string))
+                        else if (value.GetType() == typeof(string))
                         {
                             commandString += field.Name + "=" + "\"" + value + "\"" + ",";
                         }
@@ -219,7 +217,6 @@ namespace plot
                 #endregion
 
                 System.IO.File.WriteAllText(path, content);
-
                 //Debug.Log("Generate TXT Commands!");
             }
 
@@ -270,7 +267,7 @@ namespace plot
                             var value = Convert.ChangeType(parameters[fields[j].Name], fields[j].FieldType);
                             fields[j].SetValue(command, value);
                         }
-                        else if(fields[j].FieldType.IsGenericType)
+                        else if (fields[j].FieldType.IsGenericType)
                         {
                             //解析IList
                             if (typeof(IList).IsAssignableFrom(fields[j].FieldType))
@@ -310,7 +307,7 @@ namespace plot
                         }
                         else
                         {
-                            Debug.LogError("The parameters " + "does not have "+ commandType + " 's field: " + fields[j].Name);
+                            Debug.LogError("The parameters " + "does not have " + commandType + " 's field: " + fields[j].Name);
                         }
                     }
                     #endregion

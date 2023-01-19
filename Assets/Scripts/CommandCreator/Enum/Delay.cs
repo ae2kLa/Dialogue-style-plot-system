@@ -1,6 +1,6 @@
 using System;
 
-namespace plot
+namespace plot_command_creator
 {
     [Serializable]
     public class Delay : CommandBase

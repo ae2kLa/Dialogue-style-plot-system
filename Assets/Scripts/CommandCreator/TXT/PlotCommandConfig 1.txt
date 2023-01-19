@@ -1,5 +1,0 @@
-[HEADER(title="123",is_skippable=True,fit_mode="312")]
-[Background(image="123")]
-[Delay(time=0)]
-[Dialogue(talker_name="123",talker_text="123")]
-[Decision(elementType="System.String",element1="",element2="qwe")]
