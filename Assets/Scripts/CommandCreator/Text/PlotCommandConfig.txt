@@ -2,5 +2,5 @@
 [Background(image="")]
 [Delay(time=0)]
 [Dialogue(talker_name="",talker_text="")]
-[Decision()]
+[Decision(elementType="System.String",element1="aaa",element2="bbb",element3="ccc")]
 [Predicate(value=0)]

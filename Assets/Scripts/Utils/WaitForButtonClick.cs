@@ -1,7 +1,7 @@
 using FairyGUI;
 using UnityEngine;
 
-namespace plot_command_executor
+namespace plot_utils
 {
     public class WaitForButtonClick : CustomYieldInstruction
     {

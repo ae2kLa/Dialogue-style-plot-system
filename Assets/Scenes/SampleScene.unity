@@ -231,7 +231,6 @@ GameObject:
   - component: {fileID: 956018019}
   - component: {fileID: 956018018}
   - component: {fileID: 956018021}
-  - component: {fileID: 956018020}
   m_Layer: 5
   m_Name: UIPanel
   m_TagString: Untagged
@@ -281,20 +280,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &956018020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 956018017}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e28ad1a4efbad4bb7587aedd5ed336, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  global: 1
-  decisions: 
 --- !u!114 &956018021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,8 +293,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   global: 1
-  filePath: Assets/Text/level01.txt
-  i: 0
+  filePath: Assets/Scripts/CommandCreator/Text/PlotCommandConfig.txt
+  commandNameSpace: plot_command_executor_fgui
+  decisions: 
 --- !u!1 &1668905340
 GameObject:
   m_ObjectHideFlags: 0

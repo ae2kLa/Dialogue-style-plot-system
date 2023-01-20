@@ -8,11 +8,6 @@ namespace plot_command_executor_fgui
     {
         int value;
 
-        public Predicate(int value)
-        {
-
-        }
-
         public void Execute()
         {
             throw new System.NotImplementedException();

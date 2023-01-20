@@ -1,4 +1,5 @@
 using FairyGUI;
+using plot_utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,8 +9,10 @@ using UnityEngine;
 
 namespace plot_command_executor
 {
-    public class CommandSender : MonoSingleton<CommandReceiver>
+    public class CommandSender : MonoSingleton<CommandSender>
     {
+        public string filePath = "Assets/Scripts/CommandCreator/Text/PlotCommandConfig.txt";
+        public string commandNameSpace = "plot_command_executor_fgui";
         private Queue<ICommand> commandsQueue { get; set; }
 
 
@@ -26,6 +29,11 @@ namespace plot_command_executor
             Debug.Log("CommandSender Instance Awake Done");
         }
 
+        private void OnEnable()
+        {
+            commandsQueue = this.GetCommandsQueue(filePath , commandNameSpace);
+        }
+
         protected override void OnStart()
         {
             GLoader loader = dialogueRoot.GetChild("n4").asLoader;
@@ -38,6 +46,24 @@ namespace plot_command_executor
             if (commandsQueue.Count != 0)
                 commandsQueue.Peek().OnUpdate();
         }
+
+        public Queue<ICommand> GetCommandsQueue(string filePath, string commandNameSpace)
+        {
+            MyCommand[] mc = TextParser.ParserByLine(filePath);
+            Queue<ICommand> commandsQueue = new Queue<ICommand>();
+
+            for (int i = 0; i < mc.Length; i++)
+            {
+                Type commandType = Type.GetType(commandNameSpace + "." + mc[i].name);
+                object command = Activator.CreateInstance(commandType);
+                TextParser.AssignCommandParams(command, commandType, mc[i].parameter);
+                commandsQueue.Enqueue(command as ICommand);
+            }
+
+            return commandsQueue;
+        }
+
+
 
         #region "Old implementation"
         //public IEnumerator HEADER(string title, bool is_skippable, string fit_mode)

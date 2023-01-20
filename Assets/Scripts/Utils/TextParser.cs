@@ -1,30 +1,16 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace plot_utils
 {
-
-    public class TextParser
+    public static class TextParser
     {
-        string[] lines;
-
-        public TextParser(){ UnityEngine.Debug.LogError("No valid file path!"); }
-
-        public TextParser(string _filePath)
-        {
-            try
-            {
-                lines = File.ReadAllLines(_filePath);
-            }
-            catch (IOException ex)
-            {
-                UnityEngine.Debug.Log("Error opening file: " + ex.Message);
-            }
-        }
-
-        private string GetName(string _line)
+        private static string GetName(string _line)
         {
             Regex regex = new Regex(@"(?<=\[)\w+");
             Match match = regex.Match(_line);
@@ -61,7 +47,7 @@ namespace plot_utils
         #endregion
 
         #region"New GetParam Function"
-        private string GetParam(string _line)
+        private static string GetParam(string _line)
         {
             Regex regex = new Regex(@"(?<=\()([^)]+)(?=\))");
             Match match = regex.Match(_line);
@@ -73,8 +59,8 @@ namespace plot_utils
         }
         #endregion
 
-        public Dictionary<string, object> ParseParameters(string param)
-         {
+        private static Dictionary<string, object> ParseParameters(string param)
+        {
             if (string.IsNullOrEmpty(param)) return new Dictionary<string, object>();
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
@@ -98,11 +84,12 @@ namespace plot_utils
                 parameters.Add(key, value);
             }
             return parameters;
-         }
+        }
 
 
-        public MyCommand[] ParserByLine()
+        public static MyCommand[] ParserByLine(string _filePath)
         {
+            string[] lines = File.ReadAllLines(_filePath);
             MyCommand[] res = new MyCommand[lines.Length];
 
             for (int i = 0; i < lines.Length; i++)
@@ -116,6 +103,64 @@ namespace plot_utils
 
             return res;
         }
+
+        #region "解析参数，并为command对象的每个字段赋值"
+        public static void AssignCommandParams(object command, Type commandType, string parameter)
+        {
+            Dictionary<string, object> parameters = TextParser.ParseParameters(parameter);
+            FieldInfo[] fields = commandType.GetFields();
+
+            for (int j = 0; j < fields.Length; j++)
+            {
+                if (parameters.ContainsKey(fields[j].Name))
+                {
+                    var value = Convert.ChangeType(parameters[fields[j].Name], fields[j].FieldType);
+                    fields[j].SetValue(command, value);
+                }
+                else if (fields[j].FieldType.IsGenericType)
+                {
+                    //解析IList
+                    if (typeof(IList).IsAssignableFrom(fields[j].FieldType))
+                    {
+                        //试图适配所有基本类型但有困难
+                        //Type elemnetType = Type.GetType(parameters["elementType"] as string);
+                        //Type listType = typeof(List<>);
+                        //Type[] typeArgs = { elemnetType };
+                        //Type genericListType = listType.MakeGenericType(typeArgs);
+                        //object list = Activator.CreateInstance(genericListType);
+
+                        //if (parameters.ContainsKey("elementType"))
+                        //{
+                        //    fields[j].SetValue(command, list);
+                        //    continue;
+                        //}
+
+                        Type elemnetType = typeof(String);
+                        Type listType = typeof(List<>);
+                        Type[] typeArgs = { elemnetType };
+                        Type genericListType = listType.MakeGenericType(typeArgs);
+                        object list = Activator.CreateInstance(genericListType);
+
+                        MethodInfo addMethod = genericListType.GetMethod("Add");
+
+                        for (int k = 1; k < parameters.Count; k++)
+                        {
+                            object[] objs = new object[1] { parameters["element" + k] };
+                            addMethod.Invoke(list, objs);
+                            continue;
+                        }
+
+                        fields[j].SetValue(command, list);
+                    }
+                    //解析字典
+                }
+                else
+                {
+                    Debug.LogError("The parameters " + "does not have " + commandType + " 's field: " + fields[j].Name);
+                }
+            }
+        }
+        #endregion
     }
 
     public struct MyCommand

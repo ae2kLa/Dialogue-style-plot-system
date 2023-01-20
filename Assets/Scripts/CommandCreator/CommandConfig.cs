@@ -27,7 +27,7 @@ namespace plot_command_creator
 
         public List<CommandBase_SO> commandList = new List<CommandBase_SO>();
         public string fileName;
-        private string txtSavePath = "Assets/Scripts/CommandCreator/TXT/";
+        private string txtSavePath = "Assets/Scripts/CommandCreator/Text/";
 
         [CustomEditor(typeof(CommandConfig))]
         public class CommandConfigEditor : Editor
@@ -238,81 +238,13 @@ namespace plot_command_creator
 
                 commandConfig.commandList.Clear();
 
-                TextParser textParser = new TextParser(filePath);
-                MyCommand[] mc = textParser.ParserByLine();
+                MyCommand[] mc = TextParser.ParserByLine(filePath);
 
                 for (int i = 0; i < mc.Length; i++)
                 {
                     Type commandType = Type.GetType("plot_command_creator." + mc[i].name);
-                    if (commandType == null)
-                    {
-                        Debug.LogError("Invalid commandType in loading commands from txt.");
-                        continue;
-                    }
-
                     CommandBase_SO command = ScriptableObject.CreateInstance(commandType) as CommandBase_SO;
-                    if (command == null)
-                    {
-                        Debug.LogError("Failed to create instance of " + mc[i].name);
-                        continue;
-                    }
-
-                    #region "解析参数，并为command对象的每个字段赋值"
-                    Dictionary<string, object> parameters = textParser.ParseParameters(mc[i].parameter);
-                    FieldInfo[] fields = commandType.GetFields();
-
-                    for (int j = 0; j < fields.Length; j++)
-                    {
-                        if (parameters.ContainsKey(fields[j].Name))
-                        {
-                            var value = Convert.ChangeType(parameters[fields[j].Name], fields[j].FieldType);
-                            fields[j].SetValue(command, value);
-                        }
-                        else if (fields[j].FieldType.IsGenericType)
-                        {
-                            //解析IList
-                            if (typeof(IList).IsAssignableFrom(fields[j].FieldType))
-                            {
-                                //试图适配所有基本类型但有困难
-                                //Type elemnetType = Type.GetType(parameters["elementType"] as string);
-                                //Type listType = typeof(List<>);
-                                //Type[] typeArgs = { elemnetType };
-                                //Type genericListType = listType.MakeGenericType(typeArgs);
-                                //object list = Activator.CreateInstance(genericListType);
-
-                                //if (parameters.ContainsKey("elementType"))
-                                //{
-                                //    fields[j].SetValue(command, list);
-                                //    continue;
-                                //}
-
-                                Type elemnetType = typeof(String);
-                                Type listType = typeof(List<>);
-                                Type[] typeArgs = { elemnetType };
-                                Type genericListType = listType.MakeGenericType(typeArgs);
-                                object list = Activator.CreateInstance(genericListType);
-
-                                MethodInfo addMethod = genericListType.GetMethod("Add");
-
-                                for (int k = 1; k < parameters.Count; k++)
-                                {
-                                    object[] objs = new object[1];
-                                    objs[0] = parameters["element" + k];
-                                    addMethod.Invoke(list, objs);
-                                    continue;
-                                }
-
-                                fields[j].SetValue(command, list);
-                            }
-                            //解析字典
-                        }
-                        else
-                        {
-                            Debug.LogError("The parameters " + "does not have " + commandType + " 's field: " + fields[j].Name);
-                        }
-                    }
-                    #endregion
-
+                    TextParser.AssignCommandParams(command, commandType, mc[i].parameter);
                     commandConfig.commandList.Add(command);
                 }
 
