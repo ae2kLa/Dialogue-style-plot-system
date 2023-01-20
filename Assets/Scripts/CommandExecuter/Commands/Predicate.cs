@@ -6,7 +6,12 @@ namespace plot_command_executor_fgui
 {
     public class Predicate : ICommand
     {
+        int value;
 
+        public Predicate(int value)
+        {
+
+        }
 
         public void Execute()
         {

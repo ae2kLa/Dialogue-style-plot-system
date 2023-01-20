@@ -1,94 +1,128 @@
-using plot_command_executor;
+using FairyGUI;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEngine;
+
 
 namespace plot_command_executor
 {
-    public class CommandSender : MonoSingleton<CommandSender>
+    public class CommandSender : MonoSingleton<CommandReceiver>
     {
-        private TextParser textParser;
-        public string filePath = "Assets/Text/level01.txt";
+        private Queue<ICommand> commandsQueue { get; set; }
 
+
+        private GComponent dialogueRoot;
         [HideInInspector]
-        public int i = 0;
-        [HideInInspector]
-        public MyCommand[] mc;
+        public List<int> decisions = new List<int>();
+        private float typingEffectTimeDevision = 0.01f;
+        private Vector2 pixelSize = new Vector2(1920, 1080);
 
-        private void Awake()
+        protected void Awake()
         {
-            try
-            {
-                textParser = new TextParser(filePath);
-            }
-            catch (IOException ex)
-            {
-                UnityEngine.Debug.LogError("Error opening file: " + ex.Message);
-            }
+            dialogueRoot = GetComponent<UIPanel>().ui;
+            dialogueRoot.MakeFullScreen();
+            Debug.Log("CommandSender Instance Awake Done");
         }
 
-        private void Start()
+        protected override void OnStart()
         {
-            StartCoroutine(ExecuteAllCommands());
+            GLoader loader = dialogueRoot.GetChild("n4").asLoader;
+            //TODO:和设置屏幕分辨率相关联
+            loader.SetSize(pixelSize.x, pixelSize.y);
         }
 
-
-        IEnumerator ExecuteAllCommands()
+        private void Update()
         {
-            mc = textParser.ParserByLine();
-            Type type = Type.GetType("plot.CommandReceiver");
-
-            for (i = 0; i < mc.Length; i++)
-            {
-
-                MethodInfo method = type.GetMethod(mc[i].name, BindingFlags.Public | BindingFlags.Instance);
-                ParameterInfo[] paramInfo = method.GetParameters();
-                object[] invokeParams = new object[paramInfo.Length];
-
-                Dictionary<string, object> parameters = textParser.ParseParameters(mc[i].parameter);
-
-                #region 生成形参
-                for (int j = 0; j < paramInfo.Length; j++)
-                {
-                    if (parameters.ContainsKey(paramInfo[j].Name))
-                    {
-                        invokeParams[j] = Convert.ChangeType(parameters[paramInfo[j].Name], paramInfo[j].ParameterType);
-                    }
-                    else if (paramInfo[j].HasDefaultValue)
-                    {
-                        invokeParams[j] = paramInfo[j].DefaultValue;
-                    }
-                    else
-                    {
-                        UnityEngine.Debug.LogError("Function has no default parameter!");
-                    }
-                }
-                #endregion
-
-                yield return StartCoroutine((IEnumerator)method.Invoke(CommandReceiver.Instance, invokeParams));
-            }
+            if (commandsQueue.Count != 0)
+                commandsQueue.Peek().OnUpdate();
         }
 
+        #region "Old implementation"
+        //public IEnumerator HEADER(string title, bool is_skippable, string fit_mode)
+        //{
+        //    yield return null;
+        //    Debug.Log("HEADER Done!");
+        //}
 
-        public void FindPredicate(int targetChoice)
-        {
-            for(i++ ; i < mc.Length ; i++)
-            {
-                if (mc[i].name.Equals("Predicate"))
-                {
-                    if (mc[i].parameter == null) return;
+        //public IEnumerator Background(string image = "grey")
+        //{
+        //    GLoader loader = dialogueRoot.GetChild("n4").asLoader;
+        //    loader.url = image;
+        //    yield return null;
+        //    Debug.Log("Background Done!");
+        //}
 
-                    Dictionary<string, object> ps = textParser.ParseParameters(mc[i].parameter);
-                    int predicateNum = (int)Convert.ChangeType(ps["value"], typeof(int));
-                    if (predicateNum == targetChoice) return;
-                }
-            }
-        }
+        //public IEnumerator BackgroundClose(float time = 2)
+        //{
+        //    yield return new WaitForSeconds(time);
+        //    Debug.Log("Background Close!");
+        //}
+
+        //public IEnumerator Dialogue(string name = "", string text = "")
+        //{
+        //    GTextField gtf = dialogueRoot.GetChild("n0").asTextField;
+        //    gtf.text = name;
+        //    gtf = dialogueRoot.GetChild("n1").asTextField;
+        //    gtf.text = text;
+        //    TypingEffect typingEffect = new TypingEffect(gtf);
+        //    typingEffect.Start();
+        //    typingEffect.PrintAll(typingEffectTimeDevision);
+        //    yield return new WaitForMouseButtonDown(1);
+        //    Debug.Log("Dialogue Done!");
+        //}
+
+        //public IEnumerator Delay(float time)
+        //{
+        //    yield return new WaitForSeconds(time);
+        //    Debug.Log("Delay Done!");
+        //}
+
+
+        //public IEnumerator Decision(string options)
+        //{
+        //    string[] parts = Regex.Split(options, ";");
+        //    GButton[] buttons = new GButton[parts.Length];
+
+        //    GList list = new GList();
+        //    list.SetSize(800, 600);
+        //    list.SetPosition(pixelSize.x/2 - 400 , pixelSize.y/2 - 300 , 0f);
+        //    list.columnGap = 100;
+        //    dialogueRoot.AddChild(list);
+
+        //    for (int i = 0 ; i < parts.Length; i++)
+        //    {
+        //        //创建GButton
+        //        //buttons[i] = new GButton();
+        //        buttons[i] = UIPackage.CreateObject("Package1", "DecisionButton").asButton;
+        //        list.AddChild(buttons[i]);
+        //    }
+
+        //    yield return new WaitForButtonClick(buttons);
+
+        //    for (int i = 0; i < buttons.Length; i++)
+        //    {
+        //        buttons[i].Dispose();
+        //    }
+        //    list.Dispose();
+        //    Debug.Log("Decision Done!");
+        //}
+
+        //public IEnumerator Predicate(int value = -1)
+        //{
+        //    if (value != -1)
+        //    {
+        //        CommandSender.Instance.FindPredicate(-1);
+        //    }
+
+        //    yield return null;
+        //    Debug.Log("Predicate Done!");
+        //}
+        #endregion
+
+
 
     }
-
 
 }

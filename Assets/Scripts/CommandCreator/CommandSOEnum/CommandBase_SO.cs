@@ -4,9 +4,7 @@ using UnityEngine;
 namespace plot_command_creator
 {
     [Serializable]
-    public class Predicate : CommandBase
+    public abstract class CommandBase_SO : ScriptableObject
     {
-        public int value = 0;
     }
-
 }

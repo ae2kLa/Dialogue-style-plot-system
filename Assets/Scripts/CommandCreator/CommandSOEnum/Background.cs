@@ -2,9 +2,10 @@ using System;
 
 namespace plot_command_creator
 {
+
     [Serializable]
-    public class Delay : CommandBase
+    public class Background : CommandBase_SO
     {
-        public float time;
+        public string image;
     }
 }

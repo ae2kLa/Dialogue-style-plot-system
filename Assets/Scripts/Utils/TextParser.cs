@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace plot_command_executor
+namespace plot_utils
 {
 
     public class TextParser

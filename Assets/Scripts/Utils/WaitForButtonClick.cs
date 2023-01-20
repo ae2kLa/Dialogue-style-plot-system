@@ -1,5 +1,4 @@
 using FairyGUI;
-using System.Linq;
 using UnityEngine;
 
 namespace plot_command_executor
@@ -33,8 +32,8 @@ namespace plot_command_executor
             {
                 if (buttons[i].selected == true)
                 {
-                    CommandSender.Instance.FindPredicate(i);
-                    CommandReceiver.Instance.decisions.Add(i);
+                    //CommandSender.Instance.FindPredicate(i);
+                    //CommandReceiver.Instance.decisions.Add(i);
                     buttons[i].enabled = false;
                 }
                 else

@@ -1,10 +1,11 @@
 using System;
-using UnityEngine;
 
 namespace plot_command_creator
 {
     [Serializable]
-    public abstract class CommandBase : ScriptableObject
+    public class Predicate : CommandBase_SO
     {
+        public int value = 0;
     }
+
 }

@@ -1,4 +1,4 @@
-using plot_command_executor;
+using plot_utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace plot_command_creator
             Predicate
         }
 
-        public List<CommandBase> commandList = new List<CommandBase>();
+        public List<CommandBase_SO> commandList = new List<CommandBase_SO>();
         public string fileName;
         private string txtSavePath = "Assets/Scripts/CommandCreator/TXT/";
 
@@ -40,7 +40,7 @@ namespace plot_command_creator
             {
                 commandConfig = (CommandConfig)target;
                 selectedIndex = 0;
-                reorderableList = new ReorderableList(commandConfig.commandList, typeof(CommandBase), true, true, true, true);
+                reorderableList = new ReorderableList(commandConfig.commandList, typeof(CommandBase_SO), true, true, true, true);
                 commandConfig.fileName = commandConfig.name;
 
                 reorderableList.elementHeightCallback = (int index) =>
@@ -83,9 +83,10 @@ namespace plot_command_creator
                 {
                     selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, Enum.GetNames(typeof(CommandType)));
                     string className = Enum.GetName(typeof(CommandType), (CommandType)selectedIndex);
-                    Type commandType = Type.GetType("plot." + className);
+                    Type commandType = Type.GetType("plot_command_creator." + className);
                     ScriptableObject obj = ScriptableObject.CreateInstance(commandType);
-                    commandConfig.commandList.Add(obj as CommandBase);
+                    commandConfig.commandList.Add(obj as CommandBase_SO);
+                    
                 };
 
                 LoadTXTCommands(commandConfig.fileName);
@@ -102,7 +103,7 @@ namespace plot_command_creator
                 selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, Enum.GetNames(typeof(CommandType)));
                 CommandType dialogueType = (CommandType)selectedIndex;
                 string className = Enum.GetName(typeof(CommandType), dialogueType);
-                Type commandType = Type.GetType("plot." + className);
+                Type commandType = Type.GetType("plot_command_creator." + className);
 
                 serializedObject.ApplyModifiedProperties();
 
@@ -149,7 +150,7 @@ namespace plot_command_creator
                 #endregion
 
                 #region "把commandList中的所有对象按顺序写入文本文件"
-                foreach (CommandBase command in commandConfig.commandList)
+                foreach (CommandBase_SO command in commandConfig.commandList)
                 {
                     Type commandType = command.GetType();
                     if (commandType == null)
@@ -242,17 +243,17 @@ namespace plot_command_creator
 
                 for (int i = 0; i < mc.Length; i++)
                 {
-                    CommandBase command = ScriptableObject.CreateInstance(mc[i].name) as CommandBase;
-                    if (command == null)
-                    {
-                        Debug.LogError("Failed to create instance of " + mc[i].name);
-                        continue;
-                    }
-
-                    Type commandType = command.GetType();
+                    Type commandType = Type.GetType("plot_command_creator." + mc[i].name);
                     if (commandType == null)
                     {
                         Debug.LogError("Invalid commandType in loading commands from txt.");
+                        continue;
+                    }
+
+                    CommandBase_SO command = ScriptableObject.CreateInstance(commandType) as CommandBase_SO;
+                    if (command == null)
+                    {
+                        Debug.LogError("Failed to create instance of " + mc[i].name);
                         continue;
                     }
 
