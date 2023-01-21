@@ -295,7 +295,6 @@ MonoBehaviour:
   global: 1
   filePath: Assets/Scripts/CommandCreator/Text/PlotCommandConfig.txt
   commandNameSpace: plot_command_executor_fgui
-  decisions: 
 --- !u!1 &1668905340
 GameObject:
   m_ObjectHideFlags: 0

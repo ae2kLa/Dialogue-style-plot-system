@@ -12,15 +12,17 @@ namespace plot_command_executor_fgui
 
         public void Execute()
         {
-            throw new System.NotImplementedException();
+            Debug.Log("HEADER done");
         }
 
         public void OnUpdate()
         {
-            if(Input.GetMouseButton(0) || Input.GetKeyDown(KeyCode.Space))
-            {
-                
-            }
+
+        }
+
+        public bool IsFinished()
+        {
+            return true;
         }
 
     }

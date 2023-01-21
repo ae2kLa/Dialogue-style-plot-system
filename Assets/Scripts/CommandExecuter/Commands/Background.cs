@@ -1,3 +1,4 @@
+using FairyGUI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,12 +11,19 @@ namespace plot_command_executor_fgui
 
         public void Execute()
         {
-            throw new System.NotImplementedException();
+            GLoader loader = PlotUISettings.Instance.dialogueRoot.GetChild("n4").asLoader;
+            loader.url = image;
+            Debug.Log("Background Done!");
         }
 
         public void OnUpdate()
         {
-            throw new System.NotImplementedException();
+            
+        }
+
+        public bool IsFinished()
+        {
+            return true;
         }
     }
 

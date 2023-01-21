@@ -7,15 +7,21 @@ namespace plot_command_executor_fgui
     public class Delay : ICommand
     {
         public float time;
+        private float startTime;
 
         public void Execute()
         {
-            throw new System.NotImplementedException();
+            startTime = Time.time;
         }
 
         public void OnUpdate()
         {
-            throw new System.NotImplementedException();
+
+        }
+
+        public bool IsFinished()
+        {
+            return Time.time > startTime + time;
         }
     }
 

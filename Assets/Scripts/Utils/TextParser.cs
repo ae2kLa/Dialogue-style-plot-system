@@ -156,7 +156,7 @@ namespace plot_utils
                 }
                 else
                 {
-                    Debug.LogError("The parameters " + "does not have " + commandType + " 's field: " + fields[j].Name);
+                    Debug.Log("The parameters " + "does not have " + commandType + " 's field: " + fields[j].Name);
                 }
             }
         }

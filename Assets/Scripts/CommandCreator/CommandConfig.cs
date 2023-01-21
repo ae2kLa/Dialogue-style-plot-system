@@ -69,10 +69,53 @@ namespace plot_command_creator
                     while (property.NextVisible(true))
                     {
                         rect.height = EditorGUI.GetPropertyHeight(property);
-                        int indent = EditorGUI.indentLevel;
                         EditorGUI.indentLevel++;
-                        EditorGUI.PropertyField(rect, property, true);
-                        EditorGUI.indentLevel = indent;
+                        //EditorGUI.PropertyField(rect, property, true);//PropertyField不支持文本框输入中文
+
+                        //或许使用字典/函数式更简洁
+                        float width = 90f;
+                        switch (property.propertyType)
+                        {
+                            case SerializedPropertyType.String:
+                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                                EditorGUI.BeginChangeCheck();
+                                string newValue = EditorGUI.TextField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.stringValue);
+                                if (EditorGUI.EndChangeCheck())
+                                {
+                                    property.stringValue = newValue;
+                                }
+                                break;
+                            case SerializedPropertyType.Float:
+                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                                EditorGUI.BeginChangeCheck();
+                                float newFloatValue = EditorGUI.FloatField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.floatValue);
+                                if (EditorGUI.EndChangeCheck())
+                                {
+                                    property.floatValue = newFloatValue;
+                                }
+                                break;
+                            case SerializedPropertyType.Integer:
+                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                                EditorGUI.BeginChangeCheck();
+                                int newIntValue = EditorGUI.IntField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.intValue);
+                                if (EditorGUI.EndChangeCheck())
+                                {
+                                    property.intValue = newIntValue;
+                                }
+                                break;
+                            case SerializedPropertyType.Boolean:
+                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                                EditorGUI.BeginChangeCheck();
+                                bool newBoolValue = EditorGUI.Toggle(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.boolValue);
+                                if (EditorGUI.EndChangeCheck())
+                                {
+                                    property.boolValue = newBoolValue;
+                                }
+                                break;
+                            default: EditorGUI.PropertyField(rect, property, false);break;
+                        }
+
+                        EditorGUI.indentLevel--;
                         rect.y += rect.height;
                     }
                     serializedObject.ApplyModifiedProperties();
