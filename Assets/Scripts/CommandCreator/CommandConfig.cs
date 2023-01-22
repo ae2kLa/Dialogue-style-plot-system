@@ -83,6 +83,7 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.stringValue = newValue;
+                                    GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
                             case SerializedPropertyType.Float:
@@ -92,6 +93,7 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.floatValue = newFloatValue;
+                                    GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
                             case SerializedPropertyType.Integer:
@@ -101,6 +103,7 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.intValue = newIntValue;
+                                    GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
                             case SerializedPropertyType.Boolean:
@@ -110,16 +113,16 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.boolValue = newBoolValue;
+                                    GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
-                            default: EditorGUI.PropertyField(rect, property, false);break;
+                            default: EditorGUI.PropertyField(rect, property, false); break;
                         }
 
                         EditorGUI.indentLevel--;
                         rect.y += rect.height;
                     }
                     serializedObject.ApplyModifiedProperties();
-                    GenerateTXTCommands(commandConfig.fileName);
                 };
 
                 reorderableList.onAddCallback = (ReorderableList l) =>
@@ -129,9 +132,13 @@ namespace plot_command_creator
                     Type commandType = Type.GetType("plot_command_creator." + className);
                     ScriptableObject obj = ScriptableObject.CreateInstance(commandType);
                     commandConfig.commandList.Add(obj as CommandBase_SO);
-                    
+
                 };
 
+                reorderableList.onChangedCallback = (ReorderableList l) =>
+                {
+                    GenerateTXTCommands(commandConfig.fileName);
+                };
 
                 LoadTXTCommands(commandConfig.fileName);
             }
