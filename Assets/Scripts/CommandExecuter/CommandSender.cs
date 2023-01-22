@@ -12,6 +12,7 @@ namespace plot_command_executor
         public string filePath = "Assets/Scripts/CommandCreator/Text/PlotCommandConfig.txt";
         public string commandNameSpace = "plot_command_executor_fgui";
         private Queue<ICommand> commandQueue { get; set; }
+        private ICommand currentCommand = null;
         private bool isExecuted = false;
 
         protected void Awake()
@@ -22,23 +23,28 @@ namespace plot_command_executor
 
         protected override void OnStart()
         {
-
+            currentCommand = commandQueue.Dequeue();
         }
 
         private void Update()
         {
-            if (commandQueue.Count == 0) return;
+            if (currentCommand == null) return;
 
-            ICommand command = commandQueue.Peek();
             if (!isExecuted)
             {
-                command.Execute();
+                currentCommand.Execute();
                 isExecuted = true;
             }
-            command.OnUpdate();
-            if (command.IsFinished())
+
+            currentCommand.OnUpdate();
+
+            if (currentCommand.IsFinished())
             {
-                commandQueue.Dequeue();
+                if (commandQueue.Count == 0)
+                    currentCommand = null;
+                else
+                    currentCommand = commandQueue.Dequeue();
+
                 isExecuted = false;
             }
         }

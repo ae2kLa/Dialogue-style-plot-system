@@ -39,9 +39,9 @@ namespace plot_command_creator
             private void OnEnable()
             {
                 commandConfig = (CommandConfig)target;
+                commandConfig.fileName = commandConfig.name;
                 selectedIndex = 0;
                 reorderableList = new ReorderableList(commandConfig.commandList, typeof(CommandBase_SO), true, true, true, true);
-                commandConfig.fileName = commandConfig.name;
 
                 reorderableList.elementHeightCallback = (int index) =>
                 {
@@ -131,6 +131,7 @@ namespace plot_command_creator
                     commandConfig.commandList.Add(obj as CommandBase_SO);
                     
                 };
+
 
                 LoadTXTCommands(commandConfig.fileName);
             }
