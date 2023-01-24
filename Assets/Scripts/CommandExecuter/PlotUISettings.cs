@@ -17,7 +17,7 @@ namespace plot_command_executor_fgui
             loader.SetSize(pixelSize.x, pixelSize.y);
         }
         public GComponent dialogueRoot;
-        public float typingEffectTimeDevision = 0.8f;
+        public float typingEffectTimeDevision = 0.02f;
         public Vector2 pixelSize = new Vector2(1920, 1080);
 
         public List<int> playerDecisions = new List<int>();

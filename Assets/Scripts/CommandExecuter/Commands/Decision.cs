@@ -1,9 +1,12 @@
 using FairyGUI;
+using FairyGUI.Utils;
 using plot_command_executor;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 namespace plot_command_executor_fgui
 {
@@ -19,23 +22,27 @@ namespace plot_command_executor_fgui
         {
             if (list == null) return;
 
-            gList = new GList();
-            gList.SetSize(800, 600);
-            gList.SetPosition(PlotUISettings.Instance.pixelSize.x / 2 - 400, PlotUISettings.Instance.pixelSize.y / 2 - 300, 0f);
-            gList.columnGap = 100;
-            PlotUISettings.Instance.dialogueRoot.AddChild(gList);
+            UIPackage.AddPackage("Assets/UI/Package1");
+            GComponent com = (GComponent)UIPackage.CreateObject("Package1", "ButtonList");
+            PlotUISettings.Instance.dialogueRoot.AddChild(com);
+            gList = com.GetChild("n0").asList;
+            com.Center();
+            gList.Center();
+
+            gList.itemRenderer = RenderListItem;
+            gList.numItems = list.Count;
+            gList.onClickItem.Add(DetectButtonClicked);
 
             buttons = new GButton[list.Count];
             for (int i = 0; i < list.Count; i++)
-            {
-                //´´½¨GButton
-                //buttons[i] = new GButton();
-                buttons[i] = UIPackage.CreateObject("Package1", "DecisionButton").asButton;
-                buttons[i].onClick.Add(DetectButtonClicked);
-                gList.AddChild(buttons[i]);
-            }
+                buttons[i] = gList.GetChildAt(i).asButton;
+        }
 
-            Debug.Log("Decision Done!");
+        private void RenderListItem(int index, GObject obj)
+        {
+            GButton button = obj.asButton;
+            button.GetChild("text").asTextField.text = list[index];
+            button.onClick.Set(DetectButtonClicked);
         }
 
         public void OnUpdate()
@@ -78,12 +85,12 @@ namespace plot_command_executor_fgui
 
             gList.Dispose();
             buttonClicked = true;
+            Debug.Log("Decision Done!");
         }
-
 
         public bool IsFinished()
         {
-            Debug.Log(buttonClicked);
+            //Debug.Log(buttonClicked);
             return buttonClicked;
         }
 

@@ -83,6 +83,7 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.stringValue = newValue;
+                                    serializedObject.ApplyModifiedProperties();
                                     GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
@@ -93,6 +94,7 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.floatValue = newFloatValue;
+                                    serializedObject.ApplyModifiedProperties();
                                     GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
@@ -103,6 +105,7 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.intValue = newIntValue;
+                                    serializedObject.ApplyModifiedProperties();
                                     GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
@@ -113,16 +116,18 @@ namespace plot_command_creator
                                 if (EditorGUI.EndChangeCheck())
                                 {
                                     property.boolValue = newBoolValue;
+                                    serializedObject.ApplyModifiedProperties();
                                     GenerateTXTCommands(commandConfig.fileName);
                                 }
                                 break;
-                            default: EditorGUI.PropertyField(rect, property, false); break;
+                            default:
+                                EditorGUI.PropertyField(rect, property, false);
+                                serializedObject.ApplyModifiedProperties();
+                                break;
                         }
-
                         EditorGUI.indentLevel--;
                         rect.y += rect.height;
                     }
-                    serializedObject.ApplyModifiedProperties();
                 };
 
                 reorderableList.onAddCallback = (ReorderableList l) =>
