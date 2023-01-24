@@ -9,8 +9,8 @@ namespace plot_command_executor
 {
     public class CommandSender : MonoSingleton<CommandSender>
     {
-        public string filePath = "Assets/Scripts/CommandCreator/Text/PlotCommandConfig.txt";
         public string commandNameSpace = "plot_command_executor_fgui";
+        public string filePath = "Assets/Scripts/CommandCreator/Text/PlotCommandConfig.txt";
         private Queue<ICommand> commandQueue { get; set; }
         private ICommand currentCommand = null;
         private bool isExecuted = false;
