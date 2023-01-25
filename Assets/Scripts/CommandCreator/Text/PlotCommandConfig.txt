@@ -1,5 +1,6 @@
 [HEADER(title="标题",is_skippable=True,fit_mode="适配模式")]
-[Background(image="grey")]
+[Background(image="罗德岛走廊-Fade")]
+[Delay(time=2)]
 [Dialogue(talker_name="提示名",talker_text="第一句话")]
 [Decision(elementType="System.String",element1="选项一",element2="选项二",element3="选项三",element4="选项四")]
 [Predicate(value=1)]

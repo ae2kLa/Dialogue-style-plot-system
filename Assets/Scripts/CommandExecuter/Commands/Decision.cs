@@ -39,7 +39,6 @@ namespace plot_command_executor_fgui
                     ICommand command = CommandSender.Instance.DequeueCommand();
                     Predicate p = command as Predicate;
                     if (p != null && p.value == index + 1) break;
-                    Debug.Log(index + 1);
                 }
 
                 for (int i = 0; i < gList.numChildren; i++)
