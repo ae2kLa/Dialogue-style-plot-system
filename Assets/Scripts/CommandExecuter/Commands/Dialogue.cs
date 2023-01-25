@@ -17,9 +17,9 @@ namespace plot_command_executor_fgui
 
         public void Execute()
         {
-            GTextField n0_gtf = PlotUISettings.Instance.dialogueRoot.GetChild("n0").asTextField;
+            GTextField n0_gtf = PlotUISettings.Instance.dialogueRoot.GetChild("name").asTextField;
             n0_gtf.text = talker_name;
-            GTextField n1_gtf = PlotUISettings.Instance.dialogueRoot.GetChild("n1").asTextField;
+            GTextField n1_gtf = PlotUISettings.Instance.dialogueRoot.GetChild("text").asTextField;
             n1_gtf.text = talker_text;
             
             typingEffect = new TypingEffect(n1_gtf);

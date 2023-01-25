@@ -12,7 +12,7 @@ namespace plot_command_executor_fgui
         {
             dialogueRoot = CommandSender.Instance.GetComponent<UIPanel>().ui;
             dialogueRoot.MakeFullScreen();
-            GLoader loader = dialogueRoot.GetChild("n4").asLoader;
+            GLoader loader = dialogueRoot.GetChild("background").asLoader;
             //TODO:和设置屏幕分辨率相关联
             loader.SetSize(pixelSize.x, pixelSize.y);
         }

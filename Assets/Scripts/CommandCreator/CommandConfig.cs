@@ -175,10 +175,10 @@ namespace plot_command_creator
                 //    GenerateTXTCommands(commandConfig.fileName);
                 //}
 
-                if (GUILayout.Button("Load txt File"))
-                {
-                    LoadTXTCommands(commandConfig.fileName);
-                }
+                //if (GUILayout.Button("Load txt File"))
+                //{
+                //    LoadTXTCommands(commandConfig.fileName);
+                //}
             }
 
             private void GenerateTXTCommands(string fileName)

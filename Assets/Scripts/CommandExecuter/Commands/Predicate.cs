@@ -12,7 +12,7 @@ namespace plot_command_executor_fgui
             if (this.value == 0) return;
 
             //不断出队，直至队头为 Predicate value == -1 的下一个命令
-            while (CommandSender.Instance.PeekCommand() != null)
+            while (CommandSender.Instance.GetCommandsCount() != 0)
             {
                 ICommand command = CommandSender.Instance.DequeueCommand();
                 Predicate p = command as Predicate;

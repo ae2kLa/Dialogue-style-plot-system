@@ -65,6 +65,11 @@ namespace plot_command_executor
             return commandsQueue;
         }
 
+        public int GetCommandsCount()
+        {
+            return commandQueue.Count;
+        }
+
         public ICommand PeekCommand()
         {
             return commandQueue.Peek();

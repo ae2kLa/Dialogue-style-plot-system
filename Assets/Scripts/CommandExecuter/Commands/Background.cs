@@ -11,7 +11,7 @@ namespace plot_command_executor_fgui
 
         public void Execute()
         {
-            GLoader loader = PlotUISettings.Instance.dialogueRoot.GetChild("n4").asLoader;
+            GLoader loader = PlotUISettings.Instance.dialogueRoot.GetChild("background").asLoader;
             loader.url = image;
             Debug.Log("Background Done!");
         }

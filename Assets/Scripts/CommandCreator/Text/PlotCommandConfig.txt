@@ -1,5 +1,6 @@
 [HEADER(title="标题",is_skippable=True,fit_mode="适配模式")]
 [Background(image="grey")]
+[Dialogue(talker_name="提示名",talker_text="第一句话")]
 [Decision(elementType="System.String",element1="选项一",element2="选项二",element3="选项三",element4="选项四")]
 [Predicate(value=1)]
 [Dialogue(talker_name="对话者一阿斯顿",talker_text="对话一1111111111111111111111111111111111111")]
