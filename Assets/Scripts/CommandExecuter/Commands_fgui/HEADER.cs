@@ -17,8 +17,9 @@ namespace plot_command_executor_fgui
 
             UIPackage.AddPackage("Assets/UI/Package1");
             GComponent com = (GComponent)UIPackage.CreateObject("Package1", "HEADER");
-            com.SetSize(PlotUISettings.Instance.pixelSize.x, PlotUISettings.Instance.pixelSize.y);
             PlotUISettings.Instance.dialogueRoot.AddChild(com);
+            com.SetSize(PlotUISettings.Instance.pixelSize.x, PlotUISettings.Instance.pixelSize.y);
+            com.Center();
             com.GetChild("title").asTextField.text = title;
 
             Debug.Log("HEADER done");

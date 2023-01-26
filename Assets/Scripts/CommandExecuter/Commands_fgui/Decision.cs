@@ -18,10 +18,9 @@ namespace plot_command_executor_fgui
             UIPackage.AddPackage("Assets/UI/Package1");
             GComponent com = (GComponent)UIPackage.CreateObject("Package1", "ButtonList");
             PlotUISettings.Instance.dialogueRoot.AddChild(com);
-            gList = com.GetChild("list").asList;
             com.Center();
+            gList = com.GetChild("list").asList;
             gList.Center();
-
             gList.itemRenderer = RenderListItem;
             gList.numItems = list.Count; 
         }

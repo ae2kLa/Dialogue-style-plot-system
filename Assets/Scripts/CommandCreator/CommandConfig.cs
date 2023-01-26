@@ -20,6 +20,7 @@ namespace plot_command_creator
             HEADER = 0,
             Background,
             Delay,
+            Character,
             Dialogue,
             Decision,
             Predicate
