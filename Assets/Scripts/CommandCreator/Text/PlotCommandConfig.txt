@@ -1,7 +1,7 @@
 [HEADER(title="标题",is_skippable=True,fit_mode="适配模式")]
 [Background(image="罗德岛走廊-Fade")]
 [Delay(time=2.5)]
-[Character(name1="阿米娅_",name2="",focus=0)]
+[Character(name1="阿米娅_",name2="",focus=1)]
 [Dialogue(talker_name="未知身份的角色",talker_text="醒了？")]
 [Character(name1="博士_",name2="阿米娅_",focus=1)]
 [Dialogue(talker_name="博士",talker_text="......")]

@@ -71,61 +71,117 @@ namespace plot_command_creator
                     {
                         rect.height = EditorGUI.GetPropertyHeight(property);
                         EditorGUI.indentLevel++;
-                        //EditorGUI.PropertyField(rect, property, true);//PropertyField不支持文本框输入中文
+                        //EditorGUI.PropertyField(rect, property, true);//PropertyField不支持使用微软原生的输入法来输入中文，建议下载别的输入法
 
-                        //或许使用字典/函数式更简洁
-                        float width = 90f;
-                        switch (property.propertyType)
+                        //EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                        EditorGUI.BeginChangeCheck();
+                        EditorGUI.PropertyField(rect, property, false);
+                        if (EditorGUI.EndChangeCheck())
                         {
-                            case SerializedPropertyType.String:
-                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
-                                EditorGUI.BeginChangeCheck();
-                                string newValue = EditorGUI.TextField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.stringValue);
-                                if (EditorGUI.EndChangeCheck())
-                                {
-                                    property.stringValue = newValue;
-                                    serializedObject.ApplyModifiedProperties();
-                                    GenerateTXTCommands(commandConfig.fileName);
-                                }
-                                break;
-                            case SerializedPropertyType.Float:
-                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
-                                EditorGUI.BeginChangeCheck();
-                                float newFloatValue = EditorGUI.FloatField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.floatValue);
-                                if (EditorGUI.EndChangeCheck())
-                                {
-                                    property.floatValue = newFloatValue;
-                                    serializedObject.ApplyModifiedProperties();
-                                    GenerateTXTCommands(commandConfig.fileName);
-                                }
-                                break;
-                            case SerializedPropertyType.Integer:
-                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
-                                EditorGUI.BeginChangeCheck();
-                                int newIntValue = EditorGUI.IntField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.intValue);
-                                if (EditorGUI.EndChangeCheck())
-                                {
-                                    property.intValue = newIntValue;
-                                    serializedObject.ApplyModifiedProperties();
-                                    GenerateTXTCommands(commandConfig.fileName);
-                                }
-                                break;
-                            case SerializedPropertyType.Boolean:
-                                EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
-                                EditorGUI.BeginChangeCheck();
-                                bool newBoolValue = EditorGUI.Toggle(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.boolValue);
-                                if (EditorGUI.EndChangeCheck())
-                                {
-                                    property.boolValue = newBoolValue;
-                                    serializedObject.ApplyModifiedProperties();
-                                    GenerateTXTCommands(commandConfig.fileName);
-                                }
-                                break;
-                            default:
-                                EditorGUI.PropertyField(rect, property, false);
-                                serializedObject.ApplyModifiedProperties();
-                                break;
+                            serializedObject.ApplyModifiedProperties();
+                            GenerateTXTCommands(commandConfig.fileName);
                         }
+
+                        #region 已弃用的写法1
+                        //float width = 90f;
+                        //EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                        //EditorGUI.BeginChangeCheck();
+                        //MethodInfo methodInfo = typeof(EditorGUI).GetMethod(property.propertyType.ToString() + "Field", new Type[] { typeof(Rect), property.GetType() });
+                        //if (methodInfo != null)
+                        //{
+                        //    var newValue = methodInfo.Invoke(null, new object[] { new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property });
+                        //    if (EditorGUI.EndChangeCheck())
+                        //    {
+                        //        switch (property.propertyType)
+                        //        {
+                        //            case SerializedPropertyType.Integer:
+                        //                property.intValue = (int)newValue;
+                        //                break;
+                        //            case SerializedPropertyType.Boolean:
+                        //                property.boolValue = (bool)newValue;
+                        //                break;
+                        //            case SerializedPropertyType.Float:
+                        //                property.floatValue = (float)newValue;
+                        //                break;
+                        //            case SerializedPropertyType.String:
+                        //                property.stringValue = (string)newValue;
+                        //                break;
+                        //            case SerializedPropertyType.ObjectReference:
+                        //                property.objectReferenceValue = (UnityEngine.Object)newValue;
+                        //                break;
+                        //            case SerializedPropertyType.Enum:
+                        //                property.enumValueIndex = (int)newValue;
+                        //                break;
+                        //            default:
+                        //                Debug.LogError("Unsupported type");
+                        //                break;
+                        //        }
+                        //        serializedObject.ApplyModifiedProperties();
+                        //        GenerateTXTCommands(commandConfig.fileName);
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    EditorGUI.PropertyField(rect, property, false);
+                        //    serializedObject.ApplyModifiedProperties();
+                        //}
+                        #endregion
+
+                        #region 已弃用的写法2
+                        //float width = 90f;
+                        //switch (property.propertyType)
+                        //{
+                        //    case SerializedPropertyType.String:
+                        //        EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                        //        EditorGUI.BeginChangeCheck();
+                        //        string newValue = EditorGUI.TextField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.stringValue);
+                        //        if (EditorGUI.EndChangeCheck())
+                        //        {
+                        //            property.stringValue = newValue;
+                        //            serializedObject.ApplyModifiedProperties();
+                        //            GenerateTXTCommands(commandConfig.fileName);
+                        //        }
+                        //        break;
+                        //    case SerializedPropertyType.Float:
+                        //        EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                        //        EditorGUI.BeginChangeCheck();
+                        //        float newFloatValue = EditorGUI.FloatField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.floatValue);
+                        //        if (EditorGUI.EndChangeCheck())
+                        //        {
+                        //            property.floatValue = newFloatValue;
+                        //            serializedObject.ApplyModifiedProperties();
+                        //            GenerateTXTCommands(commandConfig.fileName);
+                        //        }
+                        //        break;
+                        //    case SerializedPropertyType.Integer:
+                        //        EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                        //        EditorGUI.BeginChangeCheck();
+                        //        int newIntValue = EditorGUI.IntField(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.intValue);
+                        //        if (EditorGUI.EndChangeCheck())
+                        //        {
+                        //            property.intValue = newIntValue;
+                        //            serializedObject.ApplyModifiedProperties();
+                        //            GenerateTXTCommands(commandConfig.fileName);
+                        //        }
+                        //        break;
+                        //    case SerializedPropertyType.Boolean:
+                        //        EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
+                        //        EditorGUI.BeginChangeCheck();
+                        //        bool newBoolValue = EditorGUI.Toggle(new Rect(rect.x + width, rect.y, rect.width - width, EditorGUIUtility.singleLineHeight), property.boolValue);
+                        //        if (EditorGUI.EndChangeCheck())
+                        //        {
+                        //            property.boolValue = newBoolValue;
+                        //            serializedObject.ApplyModifiedProperties();
+                        //            GenerateTXTCommands(commandConfig.fileName);
+                        //        }
+                        //        break;
+                        //    default:
+                        //        EditorGUI.PropertyField(rect, property, false);
+                        //        serializedObject.ApplyModifiedProperties();
+                        //        break;
+                        //}
+                        #endregion
+
                         EditorGUI.indentLevel--;
                         rect.y += rect.height;
                     }
