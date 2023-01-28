@@ -71,11 +71,11 @@ namespace plot_command_creator
                     {
                         rect.height = EditorGUI.GetPropertyHeight(property);
                         EditorGUI.indentLevel++;
-                        //EditorGUI.PropertyField(rect, property, true);//PropertyField不支持使用微软原生的输入法来输入中文，建议下载别的输入法
-
-                        //EditorGUI.LabelField(new Rect(rect.x, rect.y, width, EditorGUIUtility.singleLineHeight), property.name);
                         EditorGUI.BeginChangeCheck();
+
+                        //使用PropertyField和{Type}+Field时发现：它们都不支持微软原生输入法来输入中文，建议下载别的输入法
                         EditorGUI.PropertyField(rect, property, false);
+
                         if (EditorGUI.EndChangeCheck())
                         {
                             serializedObject.ApplyModifiedProperties();
@@ -225,7 +225,7 @@ namespace plot_command_creator
                 EditorGUILayout.LabelField("txt generate & load path: " + commandConfig.txtSavePath + commandConfig.fileName);
                 //commandConfig.fileName = EditorGUILayout.TextField("fileName: ", commandConfig.fileName);
 
-                EditorGUILayout.LabelField("Auto save is always running.");
+                EditorGUILayout.LabelField("Auto save & load is always running.");
 
                 //if (GUILayout.Button("GenerateTXTCommands"))
                 //{

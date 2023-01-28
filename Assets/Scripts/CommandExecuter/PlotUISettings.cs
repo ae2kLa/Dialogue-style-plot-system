@@ -15,6 +15,7 @@ namespace plot_command_executor_fgui
         }
 
         public GComponent dialogueRoot;
+        public SkipWindow skipWindow = null;
         public float typingEffectTimeDevision = 0.02f;
         public Vector2 pixelSize = new Vector2(1920, 1080);
 

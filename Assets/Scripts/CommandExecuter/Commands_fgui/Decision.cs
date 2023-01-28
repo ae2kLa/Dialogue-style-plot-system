@@ -8,15 +8,16 @@ namespace plot_command_executor_fgui
     public class Decision : ICommand
     {
         public List<string> list;
+
+        private GComponent com;
         private GList gList;
         private bool buttonClicked = false;
-
         public void Execute()
         {
             if (list == null) return;
 
             UIPackage.AddPackage("Assets/UI/Package1");
-            GComponent com = (GComponent)UIPackage.CreateObject("Package1", "ButtonList");
+            com = (GComponent)UIPackage.CreateObject("Package1", "ButtonList");
             PlotUISettings.Instance.dialogueRoot.AddChild(com);
             com.Center();
             gList = com.GetChild("list").asList;
@@ -58,6 +59,7 @@ namespace plot_command_executor_fgui
                 gList.GetChildAt(i).Dispose();
 
             gList.Dispose();
+            com.Dispose();
             buttonClicked = true;
             Debug.Log("Decision Done!");
         }

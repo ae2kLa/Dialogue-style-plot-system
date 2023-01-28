@@ -1,6 +1,8 @@
 using FairyGUI;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 
 namespace plot_command_executor_fgui
@@ -15,6 +17,7 @@ namespace plot_command_executor_fgui
         {
             PlotUISettings.Instance.dialogueRoot.SetSize(PlotUISettings.Instance.pixelSize.x, PlotUISettings.Instance.pixelSize.y);
 
+            //创建HEADER并赋值
             UIPackage.AddPackage("Assets/UI/Package1");
             GComponent com = (GComponent)UIPackage.CreateObject("Package1", "HEADER");
             PlotUISettings.Instance.dialogueRoot.AddChild(com);
@@ -22,7 +25,32 @@ namespace plot_command_executor_fgui
             com.Center();
             com.GetChild("title").asTextField.text = title;
 
-            Debug.Log("HEADER done");
+            //初始化按钮
+            GButton skipButton = PlotUISettings.Instance.dialogueRoot.GetChild("skip_button").asButton;
+
+            if (!is_skippable)
+                skipButton.Dispose();
+            else
+            {
+                skipButton.onClick.Add(() =>
+                {
+                    if (PlotUISettings.Instance.skipWindow == null)
+                        PlotUISettings.Instance.skipWindow = new SkipWindow();
+                    PlotUISettings.Instance.skipWindow.Show();
+                    //TODO:呼出确认面板，但是这个可以在FGUI里做实现吧
+                    //加入黑场过渡
+                    PlotUISettings.Instance.skipWindow.SetConfirm();
+                    
+                    //退出
+                });
+            }
+
+            //动效末触发回调
+            Transition trans = com.GetTransition("enter_plot");
+            trans.SetHook("done", () =>
+            {
+                com.Dispose();
+            });
         }
 
         public void OnUpdate()
