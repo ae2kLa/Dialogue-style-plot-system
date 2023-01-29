@@ -24,7 +24,7 @@ namespace plot_command_executor_fgui
 
         public void SetConfirm()
         {
-            GButton gButton = this.contentPane.GetChild("confirmButton").asButton;
+            GButton gButton = this.contentPane.GetChild("frame").asCom.GetChild("confirmButton").asButton;
             gButton.onClick.Set(() =>{ PlotUISettings.Instance.dialogueRoot.Dispose(); });
         }
     }

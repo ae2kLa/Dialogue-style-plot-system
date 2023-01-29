@@ -12,7 +12,6 @@ namespace plot_command_executor_fgui
         private float startTime;
         private int textLength;
         private TypingEffect typingEffect;
-        private bool clicked = false;
         private bool isFinished = false;
 
         public void Execute()
@@ -32,18 +31,30 @@ namespace plot_command_executor_fgui
 
         public void OnUpdate()
         {
-            if(Time.time <= startTime + textLength * PlotUISettings.Instance.typingEffectTimeDevision && !clicked)
+            GObject mouseTargetObj = GRoot.inst.touchTarget;
+            GObject frame = PlotUISettings.Instance.dialogueRoot.GetChild("frame");
+            //Debug.Log(mouseTargetObj == frame && PlotUISettings.Instance.dialogueRoot.IsAncestorOf(mouseTargetObj));
+
+            if (Time.time < startTime + textLength * PlotUISettings.Instance.typingEffectTimeDevision)
             {
-                if(Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(0))
                 {
-                    typingEffect.Cancel();
-                    clicked = true;
+                    if (mouseTargetObj == frame && PlotUISettings.Instance.dialogueRoot.IsAncestorOf(mouseTargetObj))
+                    {
+                        typingEffect.Cancel();
+                        startTime = Time.time - textLength * PlotUISettings.Instance.typingEffectTimeDevision;
+                    }
                 }
             }
             else if(Input.GetMouseButtonDown(0))
             {
-                isFinished = true;
-                Debug.Log("Dialogue Done!");
+                if (mouseTargetObj == frame && PlotUISettings.Instance.dialogueRoot.IsAncestorOf(mouseTargetObj))
+                {
+                    typingEffect.Cancel();
+                    startTime = Time.time - textLength * PlotUISettings.Instance.typingEffectTimeDevision;
+                    isFinished = true;
+                    Debug.Log("Dialogue Done!");
+                }
             }
         }
 

@@ -3,29 +3,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEditor;
+using UnityEditor.Callbacks;
 using UnityEditorInternal;
 using UnityEngine;
 
 
 namespace plot_command_creator
 {
-    [Serializable]
     [CreateAssetMenu(fileName = "PlotCommandConfig", menuName = "PlotCommandConfig")]
     public class CommandConfig : ScriptableObject
     {
-        public enum CommandType
-        {
-            HEADER = 0,
-            Background,
-            Delay,
-            Character,
-            Dialogue,
-            Decision,
-            Predicate
-        }
-
+        [SerializeReference]
         public List<CommandBase_SO> commandList = new List<CommandBase_SO>();
         public string fileName;
         private string txtSavePath = "Assets/Scripts/CommandCreator/Text/";
@@ -36,6 +27,17 @@ namespace plot_command_creator
             public CommandConfig commandConfig;
             private int selectedIndex;
             private ReorderableList reorderableList;
+
+            private static List<Type> commandTypes = new List<Type>();
+
+            [DidReloadScripts]
+            private static void OnRecompile()
+            {
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+                var types = assemblies.SelectMany(assembly => assembly.GetTypes());
+                var filterTypes = types.Where(type => type.IsSubclassOf(typeof(CommandBase_SO)) && type.IsClass);
+                commandTypes = filterTypes.ToList();
+            }
 
             private void OnEnable()
             {
@@ -189,12 +191,13 @@ namespace plot_command_creator
 
                 reorderableList.onAddCallback = (ReorderableList l) =>
                 {
-                    selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, Enum.GetNames(typeof(CommandType)));
-                    string className = Enum.GetName(typeof(CommandType), (CommandType)selectedIndex);
-                    Type commandType = Type.GetType("plot_command_creator." + className);
+                    string[] names = new string[commandTypes.Count];
+                    for (int i = 0; i < commandTypes.Count; i++)
+                        names[i] = commandTypes[i].Name;
+                    selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, names);
+                    Type commandType = Type.GetType("plot_command_creator." + names[selectedIndex]);
                     ScriptableObject obj = ScriptableObject.CreateInstance(commandType);
                     commandConfig.commandList.Add(obj as CommandBase_SO);
-
                 };
 
                 reorderableList.onChangedCallback = (ReorderableList l) =>
@@ -208,15 +211,18 @@ namespace plot_command_creator
 
             public override void OnInspectorGUI()
             {
+                //base.OnInspectorGUI();
+
                 serializedObject.Update();
                 Rect rect = EditorGUILayout.GetControlRect(false, reorderableList.GetHeight());
                 reorderableList.DoList(rect);
 
                 //使用Popup控件来选择要添加的类型
-                selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, Enum.GetNames(typeof(CommandType)));
-                CommandType dialogueType = (CommandType)selectedIndex;
-                string className = Enum.GetName(typeof(CommandType), dialogueType);
-                Type commandType = Type.GetType("plot_command_creator." + className);
+                string[] names = new string[commandTypes.Count];
+                for (int i = 0; i < commandTypes.Count; i++)
+                    names[i] = commandTypes[i].Name;
+                selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, names);
+                Type commandType = Type.GetType("plot_command_creator." + names[selectedIndex]);
 
                 serializedObject.ApplyModifiedProperties();
 
@@ -363,6 +369,8 @@ namespace plot_command_creator
 
                 Debug.Log("Load TXT Commands!");
             }
+
+
         }
 
 

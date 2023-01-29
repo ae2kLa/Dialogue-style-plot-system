@@ -1,9 +1,4 @@
 using FairyGUI;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.NetworkInformation;
-using UnityEditor.PackageManager.UI;
-using UnityEngine;
 
 namespace plot_command_executor_fgui
 {
@@ -37,8 +32,7 @@ namespace plot_command_executor_fgui
                     if (PlotUISettings.Instance.skipWindow == null)
                         PlotUISettings.Instance.skipWindow = new SkipWindow();
                     PlotUISettings.Instance.skipWindow.Show();
-                    //TODO:呼出确认面板，但是这个可以在FGUI里做实现吧
-                    //加入黑场过渡
+                    //TODO:加入过渡
                     PlotUISettings.Instance.skipWindow.SetConfirm();
                     
                     //退出

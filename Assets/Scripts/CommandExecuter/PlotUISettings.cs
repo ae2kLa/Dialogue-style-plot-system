@@ -21,6 +21,12 @@ namespace plot_command_executor_fgui
 
         public List<int> playerDecisions = new List<int>();
 
+
+        public void EndPlot()
+        {
+
+        }
+
     }
 
 }
