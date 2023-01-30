@@ -293,8 +293,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   global: 1
-  commandNameSpace: plot_command_executor_fgui
-  filePath: Assets/Scripts/CommandCreator/Text/PlotCommandConfig.txt
+  commandConfig: {fileID: 11400000, guid: 4034ffcb22245814f878b0e67fa482fc, type: 2}
 --- !u!1 &1668905340
 GameObject:
   m_ObjectHideFlags: 0

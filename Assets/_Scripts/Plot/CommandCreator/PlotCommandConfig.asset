@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7f3e745f4fb04441a97fa5d6f7159ff, type: 3}
+  m_Name: PlotCommandConfig
+  m_EditorClassIdentifier: 
+  commandList:
+  - rid: 8451567233717501962
+  - rid: 8451567233717501961
+  - rid: 8451567233717501978
+  - rid: 8451567233717501963
+  - rid: 8451567233717501964
+  - rid: 8451567233717501969
+  - rid: 8451567233717501970
+  - rid: 8451567233717501967
+  - rid: 8451567233717501965
+  - rid: 8451567233717501971
+  - rid: 8451567233717501974
+  - rid: 8451567233717501966
+  - rid: 8451567233717501972
+  - rid: 8451567233717501975
+  - rid: 8451567233717501977
+  - rid: 8451567233717501979
+  - rid: 8451567233717501980
+  references:
+    version: 2
+    RefIds:
+    - rid: 8451567233717501961
+      type: {class: Background, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Background
+        image: {fileID: 21300000, guid: cd5da06c4c5683e4bbb62eddd44fe752, type: 3}
+    - rid: 8451567233717501962
+      type: {class: HEADER, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: HEADER
+        title: "\u6807\u9898"
+        is_skippable: 1
+        fit_mode: "\u9002\u914D\u6A21\u5F0F"
+    - rid: 8451567233717501963
+      type: {class: Character, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Character
+        character1: {fileID: 21300000, guid: 9266971f90feb314f9ac303280ff9321, type: 3}
+        character2: {fileID: 0}
+        focus: 0
+    - rid: 8451567233717501964
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: "\u535A\u58EB......\u4F60......\u9192\u4E86\uFF1F"
+    - rid: 8451567233717501965
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u4F60"
+        talker_text: ......
+    - rid: 8451567233717501966
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u4F60"
+        talker_text: ........................................
+    - rid: 8451567233717501967
+      type: {class: Character, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Character
+        character1: {fileID: 21300000, guid: 9266971f90feb314f9ac303280ff9321, type: 3}
+        character2: {fileID: 21300000, guid: 2d9d34d1e6651484b8fc1ae1a8ff5600, type: 3}
+        focus: 1
+    - rid: 8451567233717501969
+      type: {class: Decision, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Decision
+        list:
+        - ......
+        - ........................................
+    - rid: 8451567233717501970
+      type: {class: Predicate, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Predicate
+        value: 0
+    - rid: 8451567233717501971
+      type: {class: Predicate, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Predicate
+        value: 1
+    - rid: 8451567233717501972
+      type: {class: Predicate, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Predicate
+        value: -1
+    - rid: 8451567233717501974
+      type: {class: Character, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Character
+        character1: {fileID: 21300000, guid: 2d9d34d1e6651484b8fc1ae1a8ff5600, type: 3}
+        character2: {fileID: 21300000, guid: 9266971f90feb314f9ac303280ff9321, type: 3}
+        focus: 0
+    - rid: 8451567233717501975
+      type: {class: Character, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Character
+        character1: {fileID: 21300000, guid: 2d9d34d1e6651484b8fc1ae1a8ff5600, type: 3}
+        character2: {fileID: 0}
+        focus: 0
+    - rid: 8451567233717501977
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u4F60"
+        talker_text: "\u8FD9\u662F\u4EC0\u4E48\u5730\u65B9\uFF1F"
+    - rid: 8451567233717501978
+      type: {class: Delay, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Delay
+        time: 2.5
+    - rid: 8451567233717501979
+      type: {class: Character, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Character
+        character1: {fileID: 21300000, guid: 9266971f90feb314f9ac303280ff9321, type: 3}
+        character2: {fileID: 21300000, guid: 2d9d34d1e6651484b8fc1ae1a8ff5600, type: 3}
+        focus: 0
+    - rid: 8451567233717501980
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: "\u535A\u58EB\u4EC0\u4E48\u90FD\u4E0D\u8BB0\u5F97\u4E86\u5417......"
