@@ -40,7 +40,7 @@ namespace plot_command
         {
             GObject mouseTargetObj = GRoot.inst.touchTarget;
             GObject frame = PlotUISettings.Instance.dialogueRoot.GetChild("frame");
-
+            Debug.Log(mouseTargetObj == frame && PlotUISettings.Instance.dialogueRoot.IsAncestorOf(mouseTargetObj));
             if (Time.time < startTime + textLength * PlotUISettings.Instance.typingEffectTimeDevision)
             {
                 if (Input.GetMouseButtonDown(0))

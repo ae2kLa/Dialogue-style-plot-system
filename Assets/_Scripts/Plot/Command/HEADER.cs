@@ -18,17 +18,27 @@ namespace plot_command
 
         public override void Execute()
         {
-            //注册装载器
-            //UIObjectFactory.SetLoaderExtension(typeof(MyGLoader));
             PlotUISettings.Instance.dialogueRoot.SetSize(PlotUISettings.Instance.pixelSize.x, PlotUISettings.Instance.pixelSize.y);
 
+            //先隐藏其他组件
+            foreach (var child in PlotUISettings.Instance.dialogueRoot.GetChildren())
+            {
+                child.visible = false;
+            }
+
+            //以后可能需要注册装载器
+            //UIObjectFactory.SetLoaderExtension(typeof(MyGLoader));
+
             //创建HEADER并赋值
-            UIPackage.AddPackage("Assets/UI/Package1");
-            GComponent com = (GComponent)UIPackage.CreateObject("Package1", "HEADER");
+            UIPackage.AddPackage(PlotUISettings.Instance.fguiPackagePath);
+            GComponent com = (GComponent)UIPackage.CreateObject(PlotUISettings.Instance.fguiPackageName, "HEADER");
             PlotUISettings.Instance.dialogueRoot.AddChild(com);
             com.SetSize(PlotUISettings.Instance.pixelSize.x, PlotUISettings.Instance.pixelSize.y);
             com.Center();
             com.GetChild("title").asTextField.text = title;
+
+            //显示组件
+            PlotUISettings.Instance.dialogueRoot.visible = true;
 
             //初始化按钮
             GButton skipButton = PlotUISettings.Instance.dialogueRoot.GetChild("skip_button").asButton;
@@ -37,20 +47,24 @@ namespace plot_command
                 skipButton.Dispose();
             else
             {
-                skipButton.onClick.Add(() =>
+                skipButton.onClick.Set(() =>
                 {
                     if (PlotUISettings.Instance.skipWindow == null)
                         PlotUISettings.Instance.skipWindow = new SkipWindow();
                     PlotUISettings.Instance.skipWindow.Show();
-                    //TODO:加入过渡
-                    PlotUISettings.Instance.skipWindow.SetConfirm();
-
-                    //退出
                 });
             }
 
-            //动效末触发回调
+            //动效关键帧触发回调
             Transition trans = com.GetTransition("enter_plot");
+            trans.SetHook("full_black", () =>
+            {
+                foreach (var child in PlotUISettings.Instance.dialogueRoot.GetChildren())
+                {
+                    child.visible = true;
+                }
+            });
+
             trans.SetHook("done", () =>
             {
                 com.Dispose();

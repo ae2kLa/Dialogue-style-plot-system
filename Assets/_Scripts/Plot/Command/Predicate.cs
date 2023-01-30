@@ -1,27 +1,39 @@
+using plot_command_creator;
 using plot_command_executor;
 using System;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 
 namespace plot_command
 {
+    public enum ValueRange
+    {
+        deccision0 = 0,
+        deccision1,
+        deccision2,
+        deccision3,
+        deccision4,
+        end
+    };
+
     [Serializable]
     public class Predicate : CommandBase
     {
 
         [field: SerializeField]
-        public int value = -1;
+        public ValueRange value = ValueRange.deccision0;
 
         public override void Execute()
         {
-            if (this.value == -1) return;
+            if (this.value == ValueRange.end) return;
 
             //不断出队，直至队头为 Predicate value == -1 的下一个命令
             while (CommandSender.Instance.GetCommandsCount() != 0)
             {
                 CommandBase command = CommandSender.Instance.DequeueCommand();
                 Predicate p = command as Predicate;
-                if (p != null && p.value == -1) break;
+                if (p != null && p.value == ValueRange.end) break;
             }
         }
 
@@ -44,19 +56,26 @@ namespace plot_command
 
                 // Draw background color
                 Rect backgroundRect = position;
-                backgroundRect.height = EditorGUIUtility.singleLineHeight;
-                EditorGUI.DrawRect(backgroundRect, Color.yellow);
+                backgroundRect.height = EditorGUIUtility.singleLineHeight * 2;
+                EditorGUI.DrawRect(backgroundRect, new Color(255 / 255f, 235 / 255f, 181/255f));
 
-                // Draw label and value field
-                Rect labelRect = position;
-                labelRect.width = EditorGUIUtility.labelWidth;
-                EditorGUI.LabelField(labelRect, label);
-                Rect valueRect = position;
-                valueRect.xMin = labelRect.xMax;
-                EditorGUI.PropertyField(valueRect, property.FindPropertyRelative("value"), GUIContent.none);
+                // Draw label
+                Rect labelRect = new Rect(position.x, position.y, EditorGUIUtility.labelWidth, EditorGUIUtility.singleLineHeight);
+                EditorGUI.LabelField(labelRect, label, EditorStyles.boldLabel);
+
+                // Draw value field
+                Rect valueRect = new Rect(position.x, position.y + EditorGUIUtility.singleLineHeight, position.width, EditorGUIUtility.singleLineHeight);
+                EditorGUI.PropertyField(valueRect, property.FindPropertyRelative("value"), false);
+
                 EditorGUI.EndProperty();
             }
+
+            public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
+            {
+                return base.GetPropertyHeight(property, label) + EditorGUIUtility.singleLineHeight;
+            }
         }
+
 
     }
 }

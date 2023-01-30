@@ -16,7 +16,6 @@ namespace plot_command
         {
             //Debug.Log(AssetDatabase.GetAssetPath(image));
             GLoader loader = PlotUISettings.Instance.dialogueRoot.GetChild("background").asLoader;
-            //Debug.Log(loader);
             loader.texture = new NTexture(image.texture);
             Debug.Log("Background Done!");
         }

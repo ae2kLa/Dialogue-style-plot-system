@@ -30,6 +30,7 @@ MonoBehaviour:
   - rid: 8451567233717501977
   - rid: 8451567233717501979
   - rid: 8451567233717501980
+  - rid: 8451567239132086272
   references:
     version: 2
     RefIds:
@@ -98,7 +99,7 @@ MonoBehaviour:
       type: {class: Predicate, ns: plot_command, asm: Assembly-CSharp}
       data:
         class_name: Predicate
-        value: -1
+        value: 5
     - rid: 8451567233717501974
       type: {class: Character, ns: plot_command, asm: Assembly-CSharp}
       data:
@@ -137,3 +138,7 @@ MonoBehaviour:
         class_name: Dialogue
         talker_name: "\u963F\u7C73\u5A05"
         talker_text: "\u535A\u58EB\u4EC0\u4E48\u90FD\u4E0D\u8BB0\u5F97\u4E86\u5417......"
+    - rid: 8451567239132086272
+      type: {class: END, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: END

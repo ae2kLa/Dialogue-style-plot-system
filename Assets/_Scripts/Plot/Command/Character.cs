@@ -1,7 +1,6 @@
 using FairyGUI;
 using plot_command_executor;
 using System;
-using System.Data;
 using UnityEngine;
 
 namespace plot_command

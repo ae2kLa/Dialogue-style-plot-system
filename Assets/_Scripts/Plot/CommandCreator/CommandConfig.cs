@@ -23,7 +23,6 @@ namespace plot_command_creator
         {
             public CommandConfig commandConfig;
             private int selectedIndex;
-
             private static List<Type> commandTypes = new List<Type>();
 
             [DidReloadScripts]
@@ -48,9 +47,6 @@ namespace plot_command_creator
                 serializedObject.Update();
 
                 string[] names = new string[commandTypes.Count];
-
-                //Debug.Log(commandTypes.Count);
-
                 for (int i = 0; i < commandTypes.Count; i++)
                     names[i] = commandTypes[i].Name;
                 selectedIndex = EditorGUILayout.Popup("Command Type", selectedIndex, names);

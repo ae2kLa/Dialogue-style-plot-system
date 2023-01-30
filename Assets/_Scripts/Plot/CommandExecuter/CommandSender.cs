@@ -2,6 +2,7 @@ using plot_command;
 using plot_command_creator;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace plot_command_executor
 {
@@ -14,18 +15,27 @@ namespace plot_command_executor
 
         protected void Awake()
         {
-            commandQueue = this.GetCommandsQueue(this.commandConfig);
-            Debug.Log("CommandSender Instance Awake Done");
+            PlotEventContainer.Instance.plotBegin.AddListener(() => {
+                commandQueue = this.GetCommandsQueue(this.commandConfig);
+                currentCommand = commandQueue.Dequeue();
+                isExecuted = false;
+            });
+
+            PlotEventContainer.Instance.plotEnd.AddListener(() => {
+                commandQueue = null;
+                currentCommand = null;
+                isExecuted = false;
+            });
         }
 
         protected override void OnStart()
         {
-            currentCommand = commandQueue.Dequeue();
+
         }
 
         private void Update()
         {
-            if (currentCommand == null) return;
+            if (commandQueue == null || currentCommand == null) return;
 
             if (!isExecuted)
             {
@@ -38,9 +48,13 @@ namespace plot_command_executor
             if (currentCommand.IsFinished())
             {
                 if (commandQueue.Count == 0)
+                {
                     currentCommand = null;
+                }
                 else
+                {
                     currentCommand = commandQueue.Dequeue();
+                }
 
                 isExecuted = false;
             }

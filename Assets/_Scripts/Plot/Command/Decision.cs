@@ -21,8 +21,8 @@ namespace plot_command
 
             if (list == null) return;
 
-            UIPackage.AddPackage("Assets/UI/Package1");
-            com = (GComponent)UIPackage.CreateObject("Package1", "ButtonList");
+            UIPackage.AddPackage(PlotUISettings.Instance.fguiPackagePath);
+            com = (GComponent)UIPackage.CreateObject(PlotUISettings.Instance.fguiPackageName, "ButtonList");
             PlotUISettings.Instance.dialogueRoot.AddChild(com);
             com.Center();
             gList = com.GetChild("list").asList;
@@ -43,7 +43,7 @@ namespace plot_command
                 {
                     CommandBase command = CommandSender.Instance.DequeueCommand();
                     Predicate p = command as Predicate;
-                    if (p != null && p.value == index) break;
+                    if (p != null && p.value == (ValueRange)Enum.ToObject(typeof(ValueRange) , index)) break;
                 }
 
                 for (int i = 0; i < gList.numChildren; i++)
