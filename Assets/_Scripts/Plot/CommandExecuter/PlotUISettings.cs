@@ -5,6 +5,12 @@ using UnityEngine.Events;
 
 namespace plot_command_executor
 {
+    public struct DialogueContent
+    {
+        public string talker_name;
+        public string talker_text;
+    }
+
     public class PlotUISettings : Singleton<PlotUISettings>
     {
         public PlotUISettings()
@@ -23,6 +29,7 @@ namespace plot_command_executor
         public float typingEffectTimeDevision = 0.02f;
         public Vector2 pixelSize = new Vector2(1920, 1080);
 
+        public List<DialogueContent> dialogueContents = new List<DialogueContent>();
         public List<int> playerDecisions = new List<int>();
         public string fguiPackagePath = "Assets/UI/Plot";
         public string fguiPackageName = "Plot";
@@ -40,6 +47,9 @@ namespace plot_command_executor
             n0_gtf.text = "";
             GTextField n1_gtf = PlotUISettings.Instance.dialogueRoot.GetChild("text").asTextField;
             n1_gtf.text = "";
+
+            //还原历史记录
+            PlotUISettings.Instance.dialogueContents.Clear();
         }
     }
 

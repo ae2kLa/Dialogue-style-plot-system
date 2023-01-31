@@ -16,6 +16,8 @@ namespace plot_command_executor
         protected void Awake()
         {
             PlotEventContainer.Instance.plotBegin.AddListener(() => {
+                if (commandQueue != null || currentCommand != null) return;
+
                 commandQueue = this.GetCommandsQueue(this.commandConfig);
                 currentCommand = commandQueue.Dequeue();
                 isExecuted = false;

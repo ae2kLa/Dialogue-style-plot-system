@@ -56,7 +56,7 @@ namespace plot_command
 
         public override bool IsFinished()
         {
-            return true;
+            return false;
         }
     }
 

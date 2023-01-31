@@ -30,6 +30,21 @@ MonoBehaviour:
   - rid: 8451567233717501977
   - rid: 8451567233717501979
   - rid: 8451567233717501980
+  - rid: 8451567262040326144
+  - rid: 8451567262040326145
+  - rid: 8451567262040326146
+  - rid: 8451567262040326147
+  - rid: 8451567262040326148
+  - rid: 8451567262040326149
+  - rid: 8451567262040326150
+  - rid: 8451567262040326151
+  - rid: 8451567262040326152
+  - rid: 8451567262040326153
+  - rid: 8451567262040326154
+  - rid: 8451567262040326155
+  - rid: 8451567262040326156
+  - rid: 8451567262040326157
+  - rid: 8451567262040326158
   - rid: 8451567239132086272
   references:
     version: 2
@@ -142,3 +157,97 @@ MonoBehaviour:
       type: {class: END, ns: plot_command, asm: Assembly-CSharp}
       data:
         class_name: END
+    - rid: 8451567262040326144
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 1
+    - rid: 8451567262040326145
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 2
+    - rid: 8451567262040326146
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 3
+    - rid: 8451567262040326147
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 4
+    - rid: 8451567262040326148
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 5
+    - rid: 8451567262040326149
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 6
+    - rid: 8451567262040326150
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 7
+    - rid: 8451567262040326151
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 8
+    - rid: 8451567262040326152
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 9
+    - rid: 8451567262040326153
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: "\u5728\u821E\u53F0\u4E0A\u70B9\u4E2D\u4E00\u4E2A\u5217\u8868\uFF0C\u53F3\u8FB9\u5C5E\u6027\u680F\u663E\u793A\u7684\u662F\u5217\u8868\u7684\u5C5E\u6027\uFF1A
+          1. \u5217\u8868\u5E03\u5C40 \u76EE\u524D\u652F\u6301\u7684\u5217\u8868\u6709\u4E94\u79CD\u3002
+          1.1. \u5355\u5217\u6BCF\u884C\u4E00\u4E2Aitem\uFF0C\u7AD6\u5411\u6392\u5217\u3002
+          1.2. \u5355\u884C\u6BCF\u5217\u4E00\u4E2Aitem\uFF0C\u6A2A\u5411\u6392\u5217\u3002
+          1.3. \u6A2A\u5411\u6D41\u52A8item\u6A2A\u5411\u4F9D\u6B21\u6392\u5217\uFF0C\u5230\u5E95\u89C6\u53E3\u53F3\u4FA7\u8FB9\u7F18\u6216\u5230\u8FBE\u6307\u5B9A\u7684\u5217\u6570\uFF0C\u81EA\u52A8\u6362\u884C\u7EE7\u7EED\u6392\u5217\u3002"
+    - rid: 8451567262040326154
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 11
+    - rid: 8451567262040326155
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 12
+    - rid: 8451567262040326156
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 13
+    - rid: 8451567262040326157
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 14
+    - rid: 8451567262040326158
+      type: {class: Dialogue, ns: plot_command, asm: Assembly-CSharp}
+      data:
+        class_name: Dialogue
+        talker_name: "\u963F\u7C73\u5A05"
+        talker_text: 15

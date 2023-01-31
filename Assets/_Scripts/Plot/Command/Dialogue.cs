@@ -34,13 +34,19 @@ namespace plot_command
 
             startTime = Time.time;
             textLength = talker_text.Length;
+
+            DialogueContent dialogueContent;
+            dialogueContent.talker_name = talker_name ;
+            dialogueContent.talker_text = talker_text;
+            PlotUISettings.Instance.dialogueContents.Add(dialogueContent);
         }
 
         public override void OnUpdate()
         {
             GObject mouseTargetObj = GRoot.inst.touchTarget;
             GObject frame = PlotUISettings.Instance.dialogueRoot.GetChild("frame");
-            Debug.Log(mouseTargetObj == frame && PlotUISettings.Instance.dialogueRoot.IsAncestorOf(mouseTargetObj));
+            //Debug.Log(mouseTargetObj == frame && PlotUISettings.Instance.dialogueRoot.IsAncestorOf(mouseTargetObj));
+
             if (Time.time < startTime + textLength * PlotUISettings.Instance.typingEffectTimeDevision)
             {
                 if (Input.GetMouseButtonDown(0))
