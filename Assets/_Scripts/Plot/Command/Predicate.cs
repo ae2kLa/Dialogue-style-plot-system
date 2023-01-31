@@ -9,11 +9,11 @@ namespace plot_command
 {
     public enum ValueRange
     {
-        deccision0 = 0,
-        deccision1,
-        deccision2,
-        deccision3,
-        deccision4,
+        decision0 = 0,
+        decision1,
+        decision2,
+        decision3,
+        decision4,
         end
     };
 
@@ -22,7 +22,7 @@ namespace plot_command
     {
 
         [field: SerializeField]
-        public ValueRange value = ValueRange.deccision0;
+        public ValueRange value = ValueRange.decision0;
 
         public override void Execute()
         {

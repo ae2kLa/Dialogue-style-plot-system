@@ -6,12 +6,9 @@ public class Entry : MonoBehaviour
 {
     public GameObject dialogueUIPrefab;
 
-    private GameObject dialogueUI;
-
-    void Start()
+    void Awake()
     {
-        dialogueUI = GameObject.Instantiate(dialogueUIPrefab);
-        PlotUISettings.Instance.dialogueRoot.visible = false;
+        PlotEventContainer.Instance.PlotInit(dialogueUIPrefab);
     }
 
     private void Update()

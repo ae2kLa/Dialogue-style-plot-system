@@ -28,6 +28,7 @@ namespace plot_command_executor
                 currentCommand = null;
                 isExecuted = false;
             });
+
         }
 
         protected override void OnStart()

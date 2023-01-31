@@ -18,9 +18,9 @@ namespace plot_command
 
         public abstract void Execute();
 
-        public abstract bool IsFinished();
-
         public abstract void OnUpdate();
+
+        public abstract bool IsFinished();
     }
 
 }

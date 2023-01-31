@@ -25,6 +25,7 @@ namespace plot_command
             com = (GComponent)UIPackage.CreateObject(PlotUISettings.Instance.fguiPackageName, "ButtonList");
             PlotUISettings.Instance.dialogueRoot.AddChild(com);
             com.Center();
+            com.name = "DecisionButtonList";
             gList = com.GetChild("list").asList;
             gList.Center();
             gList.itemRenderer = RenderListItem;
