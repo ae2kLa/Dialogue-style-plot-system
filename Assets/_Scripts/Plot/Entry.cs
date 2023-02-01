@@ -1,6 +1,5 @@
 using UnityEngine;
-using plot_command_executor;
-
+using plot_module;
 
 public class Entry : MonoBehaviour
 {
@@ -8,14 +7,14 @@ public class Entry : MonoBehaviour
 
     void Awake()
     {
-        PlotEventContainer.Instance.PlotInit(dialogueUIPrefab);
+        PlotModule.Instance.PlotInit(dialogueUIPrefab);
     }
 
     private void Update()
     {
         if(Input.GetKeyDown(KeyCode.E))
         {
-            PlotEventContainer.Instance.plotBegin.Invoke();
+            PlotModule.Instance.plotBegin.Invoke();
         }
     }
 

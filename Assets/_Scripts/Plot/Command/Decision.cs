@@ -50,6 +50,7 @@ namespace plot_command
                 for (int i = 0; i < gList.numChildren; i++)
                     gList.GetChildAt(i).touchable = false;
 
+                PlotUISettings.Instance.playerDecisions.Add(index);
                 Destory(null);
             });
         }

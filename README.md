@@ -2,7 +2,7 @@
 
 这是一个能够在Unity中运行的剧情系统。
 
-该系统旨在提高对于游戏剧情的开发效率。
+该系统旨在提高对于游戏剧情的开发效率，同时遵循开闭原则，以确保扩展性良好。
 
 
 
@@ -20,7 +20,7 @@
 
 `PlotUISettings`：一个单例，负责在进入和退出剧情时，对某些参数进行设置和清理；同时对外暴露界面的像素大小、打字效果的速度等可供用户调整的参数。
 
-`PlotEventContainer`：一个单例，用于存放各个`Event`，并对外提供方法来进行系统的初始化。
+`PlotModule`：一个单例，用于存放各个`Event`，并对外提供各类方法，专门负责来自模块外的交互。
 
 
 
@@ -43,22 +43,50 @@
 
 
 
-### 注意事项
+### 初始化、开始和结束
 
+`plot_module.PlotModule`是专门供外部调用方法的类。
 
+该系统初始化，仅需全局调用一次`plot_command_executor.PlotModule.Instance.PlotInit(GameObject ui_prefab))`即可，界面会持久存在。
 
-### 开始和结束时的回调
+该类还提供了两个`UnityEvent`：
 
-该系统提供了两个`UnityEvent`回调：
-
+```C#
+plot_module.PlotModule.Instance.plotBegin;
+plot_module.PlotModule.Instance.plotEnd;
 ```
-plot_command_executor.PlotEventContainer.Instance.plotBegin;
-plot_command_executor.PlotEventContainer.Instance.plotEnd;
-```
+
+当你想进入某段剧情时，首先确保已经初始化了，并且通过`SetPlotConfig`设置好了剧情配置文件。然后调用`plotBegin`即可开始剧情。
+
+当你想在剧情结束时执行某些回调，你可以向`plotEnd`注册它们，在剧情界面完全退出后会自动调用。
 
 
 
-未完待续
+### 获取玩家的选择
+
+在`PlotModule`中提供了`GetPlayerDecisions`方法，返回一个`List<int>`，第`i`位上的数`x`意为玩家在第`i`次选择了第`X`个选项（均从0开始）。你可以在剧情结束后的任意时间获取它，它总是返回最近一次发生剧情的抉择。
+
+
+
+### 配置剧情文件
+
+`HEADER`，负责配置章节标题，同时在代码中负责进入剧情时的补间动画。
+
+`Background`，负责配置剧情界面最底部的背景图片。
+
+`Delay`，等待自定义时间。由于补间动画的命令是立刻执行完的，而补间动画需要一定时间播放，由此产生的时间差就由它来填补。你也可以选择在合适的位置加入或不加入此命令，以实现对应效果。
+
+`Dialogue`，没什么好说的。唯一要注意的是：人名和文本不要太长，人名在15个汉字以内，文本大概在70个汉字左右，不然会溢出屏幕。
+
+`Character`，在两个立绘都不为空时，要使用`focus`字段来选择高亮显示哪个立绘。
+
+`Decision`，文本不要太长，在15个汉字以内即可，太长了后面的文字会被隐藏。
+
+`Predicate`，拦截`Decision`的选择。一旦玩家选择了某选项，则会使命令队列不断出队，直至检测到出队的元素为对应选项的`Predicate`或是`PredicateEnd`。也正是这个原因，该系统暂时不支持循环式的选择。这一点可能以后改进。
+
+`END`，意味着整个剧情的结束。一段剧情可以有多个`END`出口。
+
+
 
 
 

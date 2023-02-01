@@ -1,4 +1,5 @@
 using FairyGUI;
+using plot_module;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,7 +50,6 @@ namespace plot_command_executor
                     {
                         if (child != com)
                             child.visible = false;
-                        //if(child.name == "")
                     }
 
                     gtween = com.TweenFade(0, 1f).OnComplete(() => {
@@ -61,7 +61,7 @@ namespace plot_command_executor
                             child.visible = true;
                         }
 
-                        PlotEventContainer.Instance.plotEnd.Invoke();
+                        PlotModule.Instance.plotEnd.Invoke();
                         com.Dispose();
                     });
                 });

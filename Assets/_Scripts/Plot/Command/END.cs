@@ -1,6 +1,7 @@
 
 using FairyGUI;
 using plot_command_executor;
+using plot_module;
 using UnityEngine;
 
 namespace plot_command
@@ -40,7 +41,7 @@ namespace plot_command
                         child.visible = true;
                     }
 
-                    PlotEventContainer.Instance.plotEnd.Invoke();
+                    PlotModule.Instance.plotEnd.Invoke();
 
                     com.Dispose();
                 });

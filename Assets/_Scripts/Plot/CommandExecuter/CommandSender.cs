@@ -1,8 +1,7 @@
 using plot_command;
 using plot_command_creator;
+using plot_module;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
 
 namespace plot_command_executor
 {
@@ -15,7 +14,7 @@ namespace plot_command_executor
 
         protected void Awake()
         {
-            PlotEventContainer.Instance.plotBegin.AddListener(() => {
+            PlotModule.Instance.plotBegin.AddListener(() => {
                 if (commandQueue != null || currentCommand != null) return;
 
                 commandQueue = this.GetCommandsQueue(this.commandConfig);
@@ -23,7 +22,7 @@ namespace plot_command_executor
                 isExecuted = false;
             });
 
-            PlotEventContainer.Instance.plotEnd.AddListener(() => {
+            PlotModule.Instance.plotEnd.AddListener(() => {
                 commandQueue = null;
                 currentCommand = null;
                 isExecuted = false;

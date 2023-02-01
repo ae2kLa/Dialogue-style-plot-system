@@ -1,4 +1,5 @@
 using FairyGUI;
+using plot_module;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,12 +18,12 @@ namespace plot_command_executor
             dialogueRoot = CommandSender.Instance.GetComponent<UIPanel>().ui;
             dialogueRoot.MakeFullScreen();
 
-            PlotEventContainer.Instance.plotBegin.AddListener(() =>
+            PlotModule.Instance.plotBegin.AddListener(() =>
             {
                 SetUI();
             });
 
-            PlotEventContainer.Instance.plotEnd.AddListener(()=>
+            PlotModule.Instance.plotEnd.AddListener(()=>
             {
                 ResetUI();
             });
@@ -97,6 +98,8 @@ namespace plot_command_executor
             PlotUISettings.Instance.dialogueContents.Clear();
 
             //清除选项按钮（若有）
+            PlotUISettings.Instance.playerDecisions.Clear();
+
             foreach (var child in PlotUISettings.Instance.dialogueRoot.GetChildren())
             {
                 if(child.name == "DecisionButtonList")
