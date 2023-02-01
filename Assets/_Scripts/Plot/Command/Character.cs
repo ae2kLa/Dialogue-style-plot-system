@@ -43,7 +43,13 @@ namespace plot_command
         {
             GComponent com = obj.asCom;
             GLoader gLoader = com.GetChild("image").asLoader;
-            gLoader.texture = new NTexture(images[index].texture);
+            //Debug.Log(images[index].rect);
+            //Debug.Log(900f / images[index].rect.width + "    " + 900f / images[index].rect.height);
+            Rect region = new Rect(0, 0, 900, 900);
+            //Rect uvRect = new Rect(images[index].rect);
+            //uvRect.width = region.width / images[index].texture.width;
+            //uvRect.height = region.height / images[index].texture.height;
+            gLoader.texture = new NTexture(images[index].texture, region);
 
             if (cnt == 2 && focus == (Focus)Enum.ToObject(typeof(Focus), index)|| cnt == 1)
             {

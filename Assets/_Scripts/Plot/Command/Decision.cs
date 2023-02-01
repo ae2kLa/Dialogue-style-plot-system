@@ -44,7 +44,7 @@ namespace plot_command
                 {
                     CommandBase command = CommandSender.Instance.DequeueCommand();
                     Predicate p = command as Predicate;
-                    if (p != null && p.value == (ValueRange)Enum.ToObject(typeof(ValueRange) , index)) break;
+                    if (p != null && (p.value == (ValueRange)Enum.ToObject(typeof(ValueRange) , index) || p.value == ValueRange.end)) break;
                 }
 
                 for (int i = 0; i < gList.numChildren; i++)
