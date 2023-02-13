@@ -9,7 +9,7 @@ namespace plot_command
     {
         [HideInInspector]
         [SerializeField]
-        protected string class_name = "asd";
+        protected string class_name = "command name";
 
         public CommandBase()
         {

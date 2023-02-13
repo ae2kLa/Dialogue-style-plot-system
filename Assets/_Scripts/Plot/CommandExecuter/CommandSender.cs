@@ -14,20 +14,36 @@ namespace plot_command_executor
 
         protected void Awake()
         {
-            PlotModule.Instance.plotBegin.AddListener(() => {
-                if (commandQueue != null || currentCommand != null) return;
 
-                commandQueue = this.GetCommandsQueue(this.commandConfig);
-                currentCommand = commandQueue.Dequeue();
-                isExecuted = false;
+        }
+
+        public void Init()
+        {
+            PlotModule.Instance.plotBegin.AddListener(() =>
+            {
+                PlotBegin();
             });
 
-            PlotModule.Instance.plotEnd.AddListener(() => {
-                commandQueue = null;
-                currentCommand = null;
-                isExecuted = false;
+            PlotModule.Instance.plotEnd.AddListener(() =>
+            {
+                PlotEnd();
             });
+        }
 
+        public void PlotBegin()
+        {
+            if (commandQueue != null || currentCommand != null) return;
+
+            commandQueue = this.GetCommandsQueue(this.commandConfig);
+            currentCommand = commandQueue.Dequeue();
+            isExecuted = false;
+        }
+
+        public void PlotEnd()
+        {
+            commandQueue = null;
+            currentCommand = null;
+            isExecuted = false;
         }
 
         protected override void OnStart()

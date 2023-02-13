@@ -3,6 +3,7 @@ using plot_command_executor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,28 +12,21 @@ namespace plot_module
     public class PlotModule : Singleton<PlotModule>
     {
         /// <summary>
-        /// 每次要进剧情就调这个
+        /// 供外部调用进入剧情
         /// </summary>
         public UnityEvent plotBegin = new UnityEvent();
 
         /// <summary>
-        /// 每次剧情结束，补间动画放完就自动调这个，如果有必要，你可以对它注册一些方法
+        /// 每次剧情结束，补间动画放完就自动调这个，外部可以对它注册一些回调
         /// </summary>
         public UnityEvent plotEnd = new UnityEvent();
 
         /// <summary>
-        /// 初始化的方法，需传入UI的预制体，它应该在CommandExecuter文件夹下。全局只需初始化一次即可，界面会持久存在
+        /// 全局初始化一次即可，界面持久存在
         /// </summary>
-        public void PlotInit(GameObject ui_prefab)
+        public void Init()
         {
-            if(ui_prefab == null)
-            {
-                Debug.Log("请检查UI预制体是否绑定到了PlotEventContainer脚本上。");
-                return;
-            }
-
-            GameObject.Instantiate(ui_prefab);
-            PlotUISettings.Instance.dialogueRoot.visible = false;
+            PlotUISettings.Instance.Init();
         }
 
         /// <summary>
@@ -42,6 +36,21 @@ namespace plot_module
         public void SetPlotConfig(CommandConfig plotConfig)
         {
             CommandSender.Instance.commandConfig = plotConfig;
+        }
+
+        /// <summary>
+        /// 在剧情开始前，设置好你的剧情配置文件，路径在Resources文件夹下
+        /// </summary>
+        /// <param name="plotConfig"></param>
+        public void SetPlotConfig(string plotConfigPath)
+        {
+            CommandConfig commandConfig = Resources.Load<CommandConfig>(plotConfigPath);
+            if (commandConfig == null)
+            {
+                Debug.LogError("SetPlotConfig : path invalid.");
+                return;
+            }
+            SetPlotConfig(commandConfig);
         }
 
         /// <summary>

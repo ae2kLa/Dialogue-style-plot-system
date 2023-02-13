@@ -47,7 +47,7 @@
 
 `plot_module.PlotModule`是专门供外部调用方法的类。
 
-该系统初始化，仅需全局调用一次`plot_command_executor.PlotModule.Instance.PlotInit(GameObject ui_prefab))`即可，界面会持久存在。
+该系统初始化，仅需全局调用一次`plot_command_executor.PlotModule.Instance.PlotInit(string path))`即可，界面会持久存在。
 
 该类还提供了两个`UnityEvent`：
 
@@ -72,7 +72,7 @@ plot_module.PlotModule.Instance.plotEnd;
 
 `HEADER`，负责配置章节标题，同时在代码中负责进入剧情时的补间动画。
 
-`Background`，负责配置剧情界面最底部的背景图片。注意：图片要放在`Asset/Resource`文件夹下，暂时不能自定义存放路径，这个以后改进。
+`Background`，负责配置剧情界面最底部的背景图片。注意：图片要放在`Asset/Resources`文件夹下，暂时不能自定义存放路径，这个以后改进。
 
 `Delay`，等待自定义时间。由于补间动画的命令是立刻执行完的，而补间动画需要一定时间播放，由此产生的时间差就由它来填补。你也可以选择在合适的位置加入或不加入此命令，以实现对应效果。
 
